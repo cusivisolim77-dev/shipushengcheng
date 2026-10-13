@@ -1,0 +1,2186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>一腾营养家营养师个性化配餐</title>
+  <style>
+    :root{
+      --bg:#ecfeff;
+      --surface:#ffffff;
+      --surface-2:#f0fdfa;
+      --primary:#0891b2;
+      --primary-dark:#0e7490;
+      --accent:#059669;
+      --accent-dark:#047857;
+      --accent-soft:#d1fae5;
+      --cyan-soft:#cffafe;
+      --blue-soft:#dbeafe;
+      --yellow-soft:#fef9c3;
+      --red:#dc2626;
+      --orange:#b45309;
+      --text:#164e63;
+      --text-strong:#0f3441;
+      --muted:#5b7180;
+      --border:#a5f3fc;
+      --border-2:#d8f6fb;
+      --shadow:0 22px 60px rgba(8,145,178,.14);
+      --radius:8px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(167,243,208,.86) 0, transparent 28rem),
+        radial-gradient(circle at top right, rgba(186,230,253,.88) 0, transparent 26rem),
+        linear-gradient(180deg,#ecfeff,#f8fffb 52%,#ffffff);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      line-height:1.6;
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:var(--primary-dark)}
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      background:#fff;
+      color:var(--text-strong);
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      z-index:999;
+    }
+    .skip:focus{left:8px}
+    .app{max-width:1180px;margin:0 auto;padding:24px 14px 48px}
+    .hero{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:18px;
+      align-items:stretch;
+      margin-bottom:16px;
+    }
+    .hero-main,.hero-side,.panel,.card{
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .hero-main{padding:26px}
+    .hero-side{padding:18px;background:linear-gradient(135deg,#ffffff,#e0f7ff)}
+    h1{margin:0 0 10px;font-size:34px;line-height:1.16;color:var(--text-strong);letter-spacing:0}
+    .lead{margin:0;color:var(--muted);font-size:16px}
+    .brand-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .import-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:14px;border-top:1px solid var(--border-2)}
+    .import-tools .hint{margin:0;font-size:13px}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--cyan-soft);
+      color:#155e75;
+      font-size:13px;
+      font-weight:800;
+    }
+    .hero-side h2{margin:0 0 8px;font-size:18px;color:var(--text-strong)}
+    .mini-list{margin:10px 0 0;padding-left:20px;color:var(--muted)}
+    .mini-list li{margin:5px 0}
+    .progress{
+      position:sticky;
+      top:0;
+      z-index:10;
+      padding:10px 0 14px;
+      background:rgba(236,254,255,.9);
+      backdrop-filter:blur(12px);
+    }
+    .progress-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:13px;color:var(--muted)}
+    .bar{height:9px;background:#d9f7fb;border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+    .bar span{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .25s ease}
+    .panel{padding:20px}
+    .step-title{margin:0 0 4px;font-size:22px;color:var(--text-strong)}
+    .hint{margin:0 0 16px;color:var(--muted);font-size:14px}
+    .section{
+      padding:18px 0;
+      border-top:1px solid var(--border-2);
+    }
+    .section:first-of-type{border-top:0;padding-top:0}
+    .section h3{margin:0 0 10px;font-size:17px;color:var(--text-strong)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .field{grid-column:span 12}
+    .field.half{grid-column:span 6}
+    .field.third{grid-column:span 4}
+    .field.quarter{grid-column:span 3}
+    label.label{display:block;margin-bottom:7px;font-weight:800;color:var(--text-strong)}
+    .field>label.label{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .save-status{margin:0 0 14px;color:var(--muted);font-size:13px}
+    .req{color:var(--red)}
+    input,select,textarea{
+      width:100%;
+      min-height:46px;
+      border:1px solid #a7e8f1;
+      border-radius:8px;
+      background:#fff;
+      color:var(--text-strong);
+      padding:10px 12px;
+      outline:none;
+    }
+    textarea{min-height:92px;resize:vertical}
+    input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{
+      outline:0;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(8,145,178,.18);
+    }
+    .choices{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .choice{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-height:46px;
+      border:1px solid #a7e8f1;
+      border-radius:8px;
+      padding:9px 10px;
+      background:#fff;
+      color:var(--text-strong);
+      font-size:14px;
+      transition:.18s ease;
+      cursor:pointer;
+    }
+    .choice:hover{border-color:var(--primary);background:#f0fdff}
+    .choice input{width:auto;min-height:auto;accent-color:var(--primary)}
+    .choice:has(input:checked){background:var(--cyan-soft);border-color:var(--primary)}
+    .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+    .actions .save-draft-btn{margin-right:auto}
+    .btn{
+      min-height:46px;
+      border:0;
+      border-radius:8px;
+      padding:10px 18px;
+      font-weight:900;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#fff;
+      box-shadow:0 12px 28px rgba(8,145,178,.2);
+      transition:filter .18s ease, transform .18s ease;
+    }
+    .btn:hover{filter:brightness(.96)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:#e7f9fb;
+      color:var(--text-strong);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+    .error{
+      display:none;
+      margin-top:12px;
+      padding:10px 12px;
+      border:1px solid #fecaca;
+      background:#fff1f2;
+      color:var(--red);
+      border-radius:8px;
+      font-weight:800;
+    }
+    .hidden{display:none!important}
+    #reportScreen{
+      position:relative;
+      overflow:hidden;
+    }
+    #reportScreen::before{
+      content:"";
+      position:absolute;
+      inset:72px -18px 0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.18;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='190' viewBox='0 0 280 190'%3E%3Ctext x='140' y='96' text-anchor='middle' dominant-baseline='middle' transform='rotate(-45 140 96)' fill='%230891b2' fill-opacity='.42' font-family='Arial,%20Microsoft%20YaHei,%20sans-serif' font-size='24' font-weight='800'%3E%E4%B8%80%E8%85%BE%E8%90%A5%E5%85%BB%E5%AE%B6%3C/text%3E%3C/svg%3E");
+      background-size:280px 190px;
+      background-repeat:repeat;
+    }
+    #reportScreen>.report-head,
+    #reportScreen>#report{
+      position:relative;
+      z-index:1;
+    }
+    .report-head{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      margin:8px 0 14px;
+    }
+    .report-brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+    .report-logo{
+      width:186px;
+      max-width:42vw;
+      height:auto;
+      display:block;
+      flex:0 0 auto;
+    }
+    .report-head h2{margin:0 0 6px;font-size:26px;color:var(--text-strong)}
+    .report-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .card{padding:16px;margin-bottom:12px;box-shadow:none}
+    .card h3{margin:0 0 10px;font-size:18px;color:var(--text-strong)}
+    .share{
+      background:linear-gradient(135deg,#ffffff,#cffafe 50%,#d1fae5);
+      border-color:#67e8f9;
+    }
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .kpi{
+      border:1px solid var(--border-2);
+      border-radius:8px;
+      background:#f8feff;
+      padding:11px;
+      min-height:86px;
+    }
+    .kpi span{display:block;color:var(--muted);font-size:13px}
+    .kpi b{display:block;margin:4px 0;font-size:22px;color:var(--text-strong);font-variant-numeric:tabular-nums}
+    .tag-row{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      min-height:28px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:#065f46;
+      font-size:13px;
+      font-weight:900;
+    }
+    .tag.warn{background:var(--yellow-soft);color:var(--orange)}
+    .tag.blue{background:var(--cyan-soft);color:#155e75}
+    .formula{
+      margin:10px 0;
+      padding:11px 12px;
+      border:1px dashed #67e8f9;
+      border-radius:8px;
+      background:#f0fdff;
+      color:#245466;
+      font-size:14px;
+    }
+    table{width:100%;border-collapse:collapse;font-size:14px;background:#fff;border-radius:8px;overflow:hidden}
+    th,td{border:1px solid var(--border-2);padding:9px 8px;text-align:left;vertical-align:top}
+    th{background:#cffafe;color:#164e63}
+    .table-scroll{overflow-x:auto;border-radius:8px}
+    .table-scroll table{min-width:980px}
+    .compact-table{font-size:13px}
+    .list{margin:0;padding-left:20px}
+    .list li{margin:5px 0}
+    .note{
+      border-left:4px solid var(--accent);
+      background:#f0fdf4;
+      border-radius:8px;
+      padding:10px 12px;
+    }
+    .risk{border-left-color:var(--red);background:#fff7f7}
+    .muted{color:var(--muted)}
+    .ok{color:#047857;font-weight:900}
+    .warn-text{color:#b45309;font-weight:900}
+    .danger-text{color:#dc2626;font-weight:900}
+    .radar-wrap{display:flex;justify-content:center;align-items:center}
+    .intervention-panel{background:linear-gradient(135deg,#ffffff,#f0fdfa 60%,#eff6ff);border-color:#99f6e4}
+    .plan-controls{display:grid;grid-template-columns:1.2fr .8fr .65fr .7fr repeat(3,.42fr) auto;gap:10px;align-items:end}
+    .plan-controls .btn{white-space:nowrap}
+    .macro-error{display:none;margin-top:10px;color:var(--red);font-weight:800;font-size:14px}
+    .movement-panel{background:linear-gradient(135deg,#ffffff,#f5f3ff 56%,#ecfeff);border-color:#c4b5fd}
+    .movement-note{border-left-color:#7c3aed;background:#f5f3ff}
+    .score-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+    .score-card{border:1px solid #ddd6fe;border-radius:8px;background:#fafaff;padding:11px;min-height:92px}
+    .score-card span{display:block;color:var(--muted);font-size:13px}.score-card b{display:block;margin:4px 0;color:var(--text-strong);font-size:19px}
+    svg text{font-family:inherit}
+    @media(max-width:860px){
+      .hero,.report-grid{grid-template-columns:1fr}
+      .field.half,.field.third,.field.quarter{grid-column:span 12}
+      .choices{grid-template-columns:1fr}
+      .kpis{grid-template-columns:repeat(2,1fr)}
+      .report-head{display:block}
+      .report-brand{align-items:flex-start;flex-direction:column;gap:8px}
+      .report-logo{width:168px;max-width:64vw}
+      .report-actions{justify-content:flex-start;margin-top:10px}
+      .plan-controls{grid-template-columns:1fr}
+      .score-grid{grid-template-columns:repeat(2,1fr)}
+      h1{font-size:28px}
+      table{font-size:13px}
+    }
+    @media(max-width:420px){
+      .kpis{grid-template-columns:1fr}
+      .app{padding-left:10px;padding-right:10px}
+      .panel,.card,.hero-main,.hero-side{padding:14px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    }
+    @media print{
+      body{background:#fff}
+      .app{max-width:none;padding:0}
+      .hero,.progress,#formScreen,.report-actions{display:none!important}
+      #reportScreen{overflow:visible}
+      #reportScreen::before{inset:68px 0 0;opacity:.14}
+      .card{break-inside:avoid;box-shadow:none}
+      a{text-decoration:none;color:inherit}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#mainForm">跳到表单</a>
+  <main class="app">
+    <section class="hero" aria-label="页面介绍">
+      <div class="hero-main">
+        <h1>一腾营养家营养师个性化配餐</h1>
+        <p class="lead">适用于 18 岁及以上、可正常经口进食的成年人，填写基础信息、疾病情况、生活方式和饮食场景后，系统会自动完成 BMI、标准体重、能量、三大营养素、餐次分配和个性化建议分析。</p>
+        <p class="hint" style="margin:10px 0 0"><b>使用边界：</b>不适用于 18 岁以下人群、孕哺期、进食障碍、急性疾病/术后急性期、吞咽障碍需专业评估者、正在接受肿瘤放化疗者，以及需要肠内/肠外营养、透析或严格限液限钾限磷方案者。出现胸痛、持续呕吐、黑便、明显体重下降或血糖/血压异常时，请优先就医。</p>
+        <div class="brand-row">
+          <span class="pill">亮色营养工具</span>
+          <span class="pill">本地计算</span>
+          <span class="pill">可打印报告</span>
+          <span class="pill">含参考依据</span>
+        </div>
+        <div class="import-tools">
+          <input id="importFile" type="file" accept=".json,.html,.htm,application/json,text/html" hidden>
+          <button class="btn secondary" type="button" id="importFileBtn">上传文件</button>
+          <span class="hint">支持调查问卷或干预方案模板导出的 JSON / HTML；无法匹配的字段保持原值。</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <h2>报告包含</h2>
+        <ul class="mini-list">
+          <li>人体测量评价与能量计算</li>
+          <li>疾病优先级和营养素比例</li>
+          <li>固定食物、主食、肉类、油脂建议</li>
+          <li>个性化餐次方案与生活方式建议</li>
+          <li>可点击的网络参考依据</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="progress" aria-label="流程进度">
+      <div class="progress-top">
+        <span id="stepText">第 1 屏：填写信息</span>
+        <span>信息收集 → 分析报告</span>
+      </div>
+      <div class="bar"><span id="progressBar"></span></div>
+    </div>
+
+    <section id="formScreen">
+      <form id="mainForm" class="panel">
+        <h2 class="step-title">信息收集表单</h2>
+        <p class="hint">带 <span class="req">*</span> 为必填。信息越完整，分析建议越贴近实际。</p>
+        <p id="saveStatus" class="save-status" role="status">填写内容会实时保存，并每 10 秒自动保存到当前浏览器；切换页面或关闭前也会补存。仅保存在本机浏览器，不是云端备份。</p>
+
+        <div class="section">
+          <h3>一、基础信息</h3>
+          <div class="grid">
+            <div class="field half">
+              <label class="label" for="name">姓名或编号 <span class="req">*</span></label>
+              <input id="name" required placeholder="例：王女士" autocomplete="name">
+            </div>
+            <div class="field quarter">
+              <label class="label" for="sex">性别 <span class="req">*</span></label>
+              <select id="sex" required>
+                <option value="">请选择</option>
+                <option value="女">女</option>
+                <option value="男">男</option>
+              </select>
+            </div>
+            <div class="field quarter">
+              <label class="label" for="age">年龄 <span class="req">*</span></label>
+              <input id="age" type="number" min="18" max="100" required placeholder="18 岁及以上">
+            </div>
+            <div class="field third">
+              <label class="label" for="height">身高 <span class="req">*</span></label>
+              <input id="height" type="number" min="80" max="230" required placeholder="cm">
+            </div>
+            <div class="field third">
+              <label class="label" for="weight">体重 <span class="req">*</span></label>
+              <input id="weight" type="number" min="20" max="220" step="0.1" required placeholder="kg">
+            </div>
+            <div class="field third">
+              <label class="label" for="region">饮食地区 <span class="req">*</span></label>
+              <select id="region" required>
+                <option value="">请选择</option>
+                <option>通用清淡</option>
+                <option>京津冀</option>
+                <option>河北</option>
+                <option>广东</option>
+                <option>粤菜</option>
+                <option>四川</option>
+                <option>川菜</option>
+                <option>山东</option>
+                <option>河南</option>
+                <option>东北</option>
+                <option>江浙</option>
+                <option>江苏</option>
+                <option>上海</option>
+                <option>福建</option>
+                <option>安徽</option>
+                <option>湖北</option>
+                <option>湖南</option>
+                <option>江西</option>
+                <option>广西</option>
+                <option>海南</option>
+                <option>贵州</option>
+                <option>云南</option>
+                <option>重庆</option>
+                <option>陕西</option>
+                <option>山西</option>
+                <option>内蒙古</option>
+                <option>甘肃宁夏青海</option>
+                <option>新疆</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>二、疾病情况与目标</h3>
+          <div class="field">
+            <label class="label">现病史或管理目标 <span class="req">*</span></label>
+            <div class="choices">
+              <label class="choice"><input type="checkbox" name="disease" value="糖尿病">糖尿病</label>
+              <label class="choice"><input type="checkbox" name="disease" value="高血压">高血压</label>
+              <label class="choice"><input type="checkbox" name="disease" value="高脂血症">高脂血症</label>
+              <label class="choice"><input type="checkbox" name="disease" value="高尿酸">高尿酸</label>
+              <label class="choice"><input type="checkbox" name="disease" value="CKD">慢性肾病（CKD）</label>
+              <label class="choice"><input type="checkbox" name="disease" value="脂肪肝">脂肪肝</label>
+              <label class="choice"><input type="checkbox" name="disease" value="COPD">慢性阻塞性肺疾病（COPD）</label>
+              <label class="choice"><input type="checkbox" name="disease" value="冠心病">冠心病</label>
+              <label class="choice"><input type="checkbox" name="disease" value="痛风">痛风</label>
+              <label class="choice"><input type="checkbox" name="disease" value="肥胖/超重">肥胖/超重</label>
+              <label class="choice"><input type="checkbox" name="disease" value="胃肠疾病">胃肠疾病</label>
+              <label class="choice"><input type="checkbox" name="disease" value="贫血">贫血</label>
+              <label class="choice"><input type="checkbox" name="disease" value="骨质疏松">骨质疏松</label>
+              <label class="choice"><input type="checkbox" name="disease" value="PCOS">卵巢内分泌代谢综合征（PMOS）</label>
+              <label class="choice"><input type="checkbox" name="disease" value="甲状腺疾病">甲状腺疾病</label>
+              <label class="choice"><input type="checkbox" name="disease" value="肿瘤康复">肿瘤康复</label>
+              <label class="choice"><input type="checkbox" name="disease" value="术后康复">术后康复</label>
+              <label class="choice"><input type="checkbox" name="disease" value="孕期">孕期</label>
+              <label class="choice"><input type="checkbox" name="disease" value="其他">其他</label>
+              <label class="choice"><input type="checkbox" name="disease" value="无明确疾病">无明确疾病</label>
+            </div>
+          </div>
+          <div class="grid" style="margin-top:14px">
+            <div class="field half">
+              <label class="label" for="goal">本次配餐目标 <span class="req">*</span></label>
+              <select id="goal" required>
+                <option value="">请选择</option>
+                <optgroup label="基础目标">
+                  <option>均衡营养</option>
+                  <option>控制体重</option>
+                  <option>增肌保肌</option>
+                  <option>改善饮食结构</option>
+                  <option>提升膳食纤维摄入</option>
+                </optgroup>
+                <optgroup label="代谢慢病">
+                  <option>控糖</option>
+                  <option>控压</option>
+                  <option>调脂</option>
+                  <option>降尿酸</option>
+                  <option>脂肪肝管理</option>
+                  <option>代谢综合征管理</option>
+                </optgroup>
+                <optgroup label="心肾与呼吸">
+                  <option>冠心病饮食管理</option>
+                  <option>肾病营养管理</option>
+                  <option>慢性阻塞性肺疾病营养支持</option>
+                  <option>低盐饮食</option>
+                  <option>低嘌呤饮食</option>
+                </optgroup>
+                <optgroup label="特殊人群">
+                  <option>孕期营养</option>
+                  <option>备孕营养</option>
+                  <option>哺乳期营养</option>
+                  <option>卵巢内分泌代谢综合征饮食管理</option>
+                  <option>老年营养</option>
+                </optgroup>
+                <optgroup label="康复与营养风险">
+                  <option>术后康复营养</option>
+                  <option>肿瘤康复营养</option>
+                  <option>贫血营养改善</option>
+                  <option>骨质疏松营养</option>
+                  <option>胃肠道调理</option>
+                  <option>营养不良风险改善</option>
+                </optgroup>
+              </select>
+              <p id="goalHint" class="hint" style="margin:8px 0 0">勾选现病史后，这里会提示更匹配的配餐目标。</p>
+            </div>
+            <div class="field half">
+              <label class="label" for="labs">实验室指标/用药 <span class="req">*</span></label>
+              <input id="labs" required placeholder="例：血糖、血压、尿酸、血脂、肌酐、二甲双胍；无异常/无用药请填“无”">
+            </div>
+            <div class="field">
+              <label class="label" for="otherDisease">其他疾病/特殊情况 <span class="req">*</span></label>
+              <input id="otherDisease" required placeholder="例：海鲜过敏、胃切除术后、吞咽不适；无请填“无”">
+            </div>
+            <div class="field half">
+              <label class="label" for="dietTexture">当前饮食质地 <span class="req">*</span></label>
+              <select id="dietTexture" required>
+                <option value="">请选择</option>
+                <option value="普食">普食：可正常咀嚼和吞咽</option>
+                <option value="软食">软食：牙口不佳或胃肠恢复期，食物软烂易嚼</option>
+                <option value="半流食">半流食：粥、烂面、蛋羹等，需结合耐受</option>
+                <option value="流质">流质：仅用于已获医生/营养师明确建议的短期阶段</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label class="label" for="allergy">明确食物过敏 <span class="req">*</span></label>
+              <input id="allergy" required placeholder="例：虾、花生、牛奶；无请填“无”">
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>三、配餐季节</h3>
+          <div class="grid">
+            <div class="field half">
+              <label class="label" for="season">配餐季节 <span class="req">*</span></label>
+              <select id="season" required>
+                <option value="春季">春季</option>
+                <option value="夏季" selected>夏季</option>
+                <option value="秋季">秋季</option>
+                <option value="冬季">冬季</option>
+              </select>
+              <p class="hint" style="margin:8px 0 0">营养干预模式和三大产能营养素供能比将在报告页中设置与动态调整。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>四、生活方式</h3>
+          <div class="grid">
+            <div class="field half">
+              <label class="label" for="job">职业/工作内容</label>
+              <input id="job" placeholder="可自由填写；能量计算以“身体活动水平”为准">
+            </div>
+            <div class="field half">
+              <label class="label" for="activity">身体活动水平 <span class="req">*</span></label>
+              <select id="activity" required>
+                <option value="">请选择</option>
+                <option value="极轻体力">极轻体力：卧床休息</option>
+                <option value="轻体力">轻体力：办公室、教师、售货、简单家务</option>
+                <option value="中体力">中体力：学生、司机、外科医生、一般农活</option>
+                <option value="重体力">重体力：建筑、搬运、重农活、运动员</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label class="label" for="exercise">运动频率 <span class="req">*</span></label>
+              <select id="exercise" required>
+                <option>几乎不运动</option>
+                <option>每周1-2次</option>
+                <option>每周3-5次</option>
+                <option>每天运动</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label class="label" for="sleep">睡眠情况 <span class="req">*</span></label>
+              <select id="sleep" required>
+                <option>不足6小时</option>
+                <option>6-8小时</option>
+                <option>超过8小时</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label class="label" for="smokeDrink">烟酒情况 <span class="req">*</span></label>
+              <select id="smokeDrink" required>
+                <option>无</option>
+                <option>偶尔饮酒</option>
+                <option>经常饮酒</option>
+                <option>吸烟</option>
+                <option>吸烟且饮酒</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="movementSection">
+          <h3>五、运动基础与功能自评（选填）</h3>
+          <div class="card movement-panel" style="margin:0">
+            <div class="note movement-note" style="margin-bottom:14px">本模块参考功能性动作筛查的核心维度，采用非疼痛、非对抗的自我报告方式。它用于识别需优先改善的运动能力维度，不是标准 FMS 测试，不用于诊断或预测损伤。</div>
+            <h4 style="margin:0 0 10px;color:var(--text-strong)">基础运动信息</h4>
+            <div class="grid">
+              <div class="field third"><label class="label" for="exerciseHabit">当前运动习惯 <span class="req">*</span></label><select id="exerciseHabit" required><option value="">请选择</option><option>无规律运动</option><option>偶尔活动</option><option>规律运动不足3个月</option><option>规律运动3个月及以上</option></select></div>
+              <div class="field third"><label class="label" for="exerciseDuration">每次运动时长 <span class="req">*</span></label><select id="exerciseDuration" required><option value="">请选择</option><option>少于15分钟</option><option>15-29分钟</option><option>30-44分钟</option><option>45-60分钟</option><option>超过60分钟</option></select></div>
+              <div class="field third"><label class="label" for="sittingTime">平均久坐时间 <span class="req">*</span></label><select id="sittingTime" required><option value="">请选择</option><option>少于4小时/日</option><option>4-6小时/日</option><option>6-8小时/日</option><option>超过8小时/日</option></select></div>
+              <div class="field half"><label class="label" for="bodyFat">体脂率（可选）</label><input id="bodyFat" type="number" min="3" max="65" step="0.1" placeholder="如有体脂秤数据可填写 %"></div>
+              <div class="field half"><label class="label">常见运动类型</label><div class="choices"><label class="choice"><input type="checkbox" name="sportType" value="步行/跑步">步行/跑步</label><label class="choice"><input type="checkbox" name="sportType" value="骑行/游泳">骑行/游泳</label><label class="choice"><input type="checkbox" name="sportType" value="力量训练">力量训练</label><label class="choice"><input type="checkbox" name="sportType" value="拉伸/瑜伽">拉伸/瑜伽</label><label class="choice"><input type="checkbox" name="sportType" value="球类/舞蹈">球类/舞蹈</label><label class="choice"><input type="checkbox" name="sportType" value="无规律运动">无规律运动</label></div></div></div>
+              <div class="field third"><label class="label" for="exerciseContra">是否有运动禁忌 <span class="req">*</span></label><select id="exerciseContra" required><option value="">请选择</option><option>无</option><option>有，已由医生评估</option><option>有，未评估</option></select></div>
+              <div class="field third"><label class="label" for="chronicPain">慢性疼痛情况 <span class="req">*</span></label><select id="chronicPain" required><option value="">请选择</option><option>无</option><option>轻度，活动后可恢复</option><option>反复或影响活动</option><option>当前明显疼痛</option></select></div>
+              <div class="field third"><label class="label" for="jointInjury">关节/运动损伤史 <span class="req">*</span></label><select id="jointInjury" required><option value="">请选择</option><option>无</option><option>既往有，已恢复</option><option>仍有限制</option><option>近期损伤未恢复</option></select></div>
+              <div class="field"><label class="label" for="cardioRisk">心血管与运动风险因素 <span class="req">*</span></label><select id="cardioRisk" required><option value="">请选择</option><option>无已知风险，运动时无胸痛/晕厥/异常气促</option><option>有高血压、糖尿病、血脂异常或家族史，状态稳定</option><option>已确诊心肺疾病或运动时出现胸痛、晕厥、异常气促</option></select></div>
+            </div>
+            <h4 style="margin:18px 0 10px;color:var(--text-strong)">简易运动功能自评（无痛范围内作答）</h4>
+            <div class="grid">
+              <div class="field half"><label class="label" for="fmsBalance">单脚站立稳定性 <span class="req">*</span></label><select id="fmsBalance" required><option value="">请选择</option><option value="3">可稳定站立30秒以上</option><option value="2">可站立15-29秒</option><option value="1">不足15秒或明显摇晃</option><option value="0">疼痛、眩晕或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsSymmetry">左右平衡/协调 <span class="req">*</span></label><select id="fmsSymmetry" required><option value="">请选择</option><option value="3">左右差异不明显，动作协调</option><option value="2">有轻微差异</option><option value="1">差异明显或易失去平衡</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsShoulder">肩关节活动度 <span class="req">*</span></label><select id="fmsShoulder" required><option value="">请选择</option><option value="3">日常上举、背手动作顺畅无痛</option><option value="2">轻度紧张或一侧略受限</option><option value="1">明显受限或左右差异大</option><option value="0">疼痛或近期需治疗</option></select></div>
+              <div class="field half"><label class="label" for="fmsThoracic">胸椎活动度 <span class="req">*</span></label><select id="fmsThoracic" required><option value="">请选择</option><option value="3">转身侧看顺畅、无代偿</option><option value="2">轻度紧张</option><option value="1">明显僵硬或代偿明显</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsHip">髋关节活动与稳定 <span class="req">*</span></label><select id="fmsHip" required><option value="">请选择</option><option value="3">下蹲、起坐和抬腿顺畅无痛</option><option value="2">轻度紧张或一侧受限</option><option value="1">明显僵硬、弹响或不稳</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsAnkle">踝关节活动与稳定 <span class="req">*</span></label><select id="fmsAnkle" required><option value="">请选择</option><option value="3">蹲起、行走和上下台阶稳定</option><option value="2">轻度紧张或偶有不稳</option><option value="1">活动受限或常崴脚</option><option value="0">疼痛、肿胀或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsSquat">深蹲能力 <span class="req">*</span></label><select id="fmsSquat" required><option value="">请选择</option><option value="3">可舒适完成椅子深蹲10次</option><option value="2">可完成但姿势/深度受限</option><option value="1">需明显借力或膝髋不稳</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsLunge">弓步/上下楼梯能力 <span class="req">*</span></label><select id="fmsLunge" required><option value="">请选择</option><option value="3">顺畅无痛，左右相近</option><option value="2">可完成但轻度不稳</option><option value="1">明显不稳或需扶手</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsCore">核心稳定能力 <span class="req">*</span></label><select id="fmsCore" required><option value="">请选择</option><option value="3">可完成平板支撑30秒且腰盆稳定</option><option value="2">可完成15-29秒或轻度代偿</option><option value="1">不足15秒或明显塌腰</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field half"><label class="label" for="fmsHamstring">腘绳肌/髋屈肌柔韧性 <span class="req">*</span></label><select id="fmsHamstring" required><option value="">请选择</option><option value="3">弯腰、抬腿日常动作顺畅</option><option value="2">轻度紧张</option><option value="1">明显紧张影响动作</option><option value="0">疼痛或无法完成</option></select></div>
+              <div class="field"><label class="label" for="fmsCalf">小腿柔韧性 <span class="req">*</span></label><select id="fmsCalf" required><option value="">请选择</option><option value="3">踝背屈与走路蹲起顺畅</option><option value="2">轻度紧张</option><option value="1">明显紧张影响蹲起</option><option value="0">疼痛或无法完成</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>六、饮食场景</h3>
+          <div class="grid">
+            <div class="field third">
+              <label class="label" for="meals">每日餐次 <span class="req">*</span></label>
+              <select id="meals" required>
+                <option value="1">一餐</option>
+                <option value="2">两餐</option>
+                <option value="3">三餐</option>
+                <option value="4">三餐一加餐</option>
+                <option value="5">三餐两加餐</option>
+                <option value="6">三餐以上</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label class="label" for="breakfastPlace">早餐场景 <span class="req">*</span></label>
+              <input id="breakfastPlace" required placeholder="家/食堂/外卖">
+            </div>
+            <div class="field third">
+              <label class="label" for="lunchPlace">午餐场景 <span class="req">*</span></label>
+              <input id="lunchPlace" required placeholder="公司食堂/家/外卖">
+            </div>
+            <div class="field half">
+              <label class="label" for="dinnerPlace">晚餐场景 <span class="req">*</span></label>
+              <input id="dinnerPlace" required placeholder="家/食堂/外卖">
+            </div>
+            <div class="field half">
+              <label class="label" for="preference">饮食偏好/禁忌 <span class="req">*</span></label>
+              <input id="preference" required placeholder="例：不吃牛肉、不能吃辣、乳糖不耐受；无请填“无”">
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary save-draft-btn" type="button" id="saveDraftBtn">另存为</button>
+          <button class="btn" type="submit">生成分析与建议</button>
+        </div>
+        <div id="formError" class="error" role="alert">请补全必填项，并至少选择一个疾病/目标选项。实验室指标/用药、其他疾病/特殊情况、过敏史和饮食偏好无异常时请填写“无”。</div>
+      </form>
+    </section>
+
+    <section id="reportScreen" class="hidden" aria-live="polite">
+      <div class="report-head">
+        <div class="report-brand">
+          <img class="report-logo" src="assets/yiteng-logo.jpg" alt="一腾营养家">
+          <div>
+            <h2 id="reportTitle">个性化配餐分析报告</h2>
+            <p id="reportSub" class="muted"></p>
+          </div>
+        </div>
+        <div class="report-actions">
+          <button class="btn secondary" type="button" id="backBtn">返回修改</button>
+          <button class="btn secondary" type="button" onclick="window.print()">打印</button>
+          <button class="btn secondary" type="button" id="exportPdfBtn">导出 PDF</button>
+          <button class="btn secondary" type="button" id="exportBtn">保存 HTML</button>
+          <button class="btn" type="button" id="savePlanBtn">保存方案 JSON</button>
+        </div>
+      </div>
+      <div id="report"></div>
+    </section>
+  </main>
+
+<script>
+const $ = id => document.getElementById(id);
+const n = id => Number($(id).value);
+const optionalN = id => {
+  const value = $(id).value.trim();
+  return value === "" ? null : Number(value);
+};
+const v = id => $(id).value.trim();
+const round1 = x => Math.round(x * 10) / 10;
+const round0 = x => Math.round(x);
+const round5 = x => Math.max(0, Math.round(x / 5) * 5);
+let latestPlanData = null;
+let latestPlan = null;
+
+const coefTable = {
+  "消瘦":{"极轻体力":30,"轻体力":35,"中体力":40,"重体力":43},
+  "正常":{"极轻体力":23,"轻体力":30,"中体力":35,"重体力":40},
+  "超重":{"极轻体力":18,"轻体力":23,"中体力":30,"重体力":35},
+  "肥胖":{"极轻体力":18,"轻体力":23,"中体力":30,"重体力":35}
+};
+
+const macroMap = {
+  "CKD":{c:60,p:12,f:28,n:"慢性肾病（CKD）优先控制蛋白摄入，需结合eGFR和医嘱进一步细化。"},
+  "高尿酸":{c:60,p:15,f:25,n:"高尿酸优先低嘌呤、控酒精、少浓汤，蛋白比例保守。"},
+  "COPD":{c:45,p:20,f:35,n:"慢性阻塞性肺疾病（COPD）可采用相对低碳高脂结构，并避免过饱影响呼吸。"},
+  "糖尿病":{c:55,p:20,f:25,n:"糖尿病采用稳定碳水、优质蛋白和分餐思路。"},
+  "脂肪肝":{c:50,p:20,f:30,n:"脂肪肝优先控制总能量、精制碳水和酒精。"},
+  "高脂血症":{c:52,p:20,f:28,n:"高脂血症优先控制饱和脂肪、反式脂肪和总能量，增加可溶性膳食纤维。"},
+  "冠心病":{c:52,p:20,f:28,n:"冠心病优先控制饱和脂肪、钠和总能量，采用清淡、足量蔬果和优质脂肪结构。"},
+  "痛风":{c:60,p:15,f:25,n:"痛风按高尿酸思路处理，优先低嘌呤、足量饮水、控酒和避免浓肉汤。"},
+  "肥胖/超重":{c:50,p:22,f:28,n:"肥胖或超重优先控制总能量，提高蛋白质质量和蔬菜体积，减少精制碳水。"},
+  "胃肠疾病":{c:55,p:18,f:27,n:"胃肠疾病优先考虑消化耐受，少油少刺激，纤维递增而不是突然加量。"},
+  "贫血":{c:55,p:20,f:25,n:"贫血优先保证优质蛋白、铁、叶酸、维生素B12和维生素C搭配。"},
+  "骨质疏松":{c:55,p:20,f:25,n:"骨质疏松优先保证蛋白、钙、维生素D来源，并配合抗阻和负重运动。"},
+  "PCOS":{c:45,p:22,f:33,n:"卵巢内分泌代谢综合征（PMOS）优先控制精制碳水和总能量，保证优质蛋白和规律运动。"},
+  "甲状腺疾病":{c:55,p:18,f:27,n:"甲状腺疾病需结合甲亢、甲减、结节和用药情况，不自行大剂量补碘或限碘。"},
+  "肿瘤康复":{c:50,p:22,f:28,n:"肿瘤康复优先防营养不良和肌肉流失，蛋白与能量需结合治疗阶段调整。"},
+  "术后康复":{c:50,p:22,f:28,n:"术后康复优先保证能量、优质蛋白和微量营养素，兼顾胃肠耐受。"},
+  "高血压":{c:55,p:20,f:25,n:"高血压重点限盐、控脂、增加蔬菜和钾来源。"},
+  "孕期":{c:55,p:18,f:27,n:"孕期不做激进控能，优先保证蛋白、钙、铁、叶酸等。"},
+  "其他":{c:55,p:18,f:27,n:"其他疾病或特殊情况已记录，需结合具体诊断、指标和医嘱做进一步个性化调整。"},
+  "无明确疾病":{c:55,p:17,f:28,n:"无明确疾病时采用均衡膳食结构。"}
+};
+
+const priority = ["CKD","高尿酸","痛风","COPD","冠心病","糖尿病","脂肪肝","高脂血症","PCOS","肿瘤康复","术后康复","胃肠疾病","贫血","骨质疏松","甲状腺疾病","肥胖/超重","高血压","孕期","其他","无明确疾病"];
+
+const diseaseLabels = {
+  CKD:"慢性肾病（CKD）",
+  COPD:"慢性阻塞性肺疾病（COPD）",
+  PCOS:"卵巢内分泌代谢综合征（PMOS）"
+};
+const diseaseLabel = disease => diseaseLabels[disease] || disease;
+
+const goalByDisease = {
+  "糖尿病":["控糖","控制体重","提升膳食纤维摄入"],
+  "高血压":["控压","低盐饮食","控制体重"],
+  "高脂血症":["调脂","控制体重","提升膳食纤维摄入"],
+  "高尿酸":["降尿酸","低嘌呤饮食","控制体重"],
+  "痛风":["降尿酸","低嘌呤饮食","控制体重"],
+  "CKD":["肾病营养管理","低盐饮食","营养不良风险改善"],
+  "脂肪肝":["脂肪肝管理","控制体重","改善饮食结构"],
+  "COPD":["慢性阻塞性肺疾病营养支持","增肌保肌","营养不良风险改善"],
+  "冠心病":["冠心病饮食管理","调脂","低盐饮食"],
+  "肥胖/超重":["控制体重","代谢综合征管理","改善饮食结构"],
+  "胃肠疾病":["胃肠道调理","改善饮食结构","营养不良风险改善"],
+  "贫血":["贫血营养改善","增肌保肌","改善饮食结构"],
+  "骨质疏松":["骨质疏松营养","增肌保肌","老年营养"],
+  "PCOS":["卵巢内分泌代谢综合征饮食管理","控糖","控制体重"],
+  "甲状腺疾病":["改善饮食结构","均衡营养","营养不良风险改善"],
+  "肿瘤康复":["肿瘤康复营养","增肌保肌","营养不良风险改善"],
+  "术后康复":["术后康复营养","增肌保肌","营养不良风险改善"],
+  "孕期":["孕期营养","贫血营养改善","均衡营养"],
+  "其他":["改善饮食结构","均衡营养","营养不良风险改善"],
+  "无明确疾病":["均衡营养","改善饮食结构","控制体重"]
+};
+
+const regionFood = {
+  "京津冀":["小米燕麦粥、鸡蛋、牛奶","杂粮饭、清蒸鱼、凉拌黄瓜、白菜豆腐汤","鸡肉炖蘑菇减油版、玉米、拌菠菜","面食和炖菜做减盐减油处理，增加杂粮、豆制品和绿叶菜"],
+  "河北":["小米燕麦粥、鸡蛋、牛奶","杂粮饭、清蒸鲤鱼、凉拌黄瓜、白菜豆腐汤","鸡肉炖蘑菇减油版、玉米、拌菠菜","河北面食和炖菜做减盐减油处理，增加杂粮、豆制品和绿叶菜"],
+  "广东":["燕麦牛奶粥、鸡蛋、番石榴","清蒸鱼、杂粮饭、白灼菜心、冬瓜海带汤","香菇蒸鸡、红薯、蒜蓉生菜、豆腐汤","白灼、清蒸、煲汤，少油少盐"],
+  "粤菜":["燕麦牛奶粥、鸡蛋、番石榴","清蒸鱼、杂粮饭、白灼菜心、冬瓜海带汤","香菇蒸鸡、红薯、蒜蓉生菜、豆腐汤","粤菜以白灼、清蒸、煲汤为主，少油少盐"],
+  "四川":["玉米小米粥、鸡蛋、苹果","少油麻婆豆腐、糙米饭、清炒油麦菜、番茄蛋汤","青椒鱼片、紫薯、凉拌黄瓜、菌菇汤","少油川味，保留香辛味，避免重油重盐"],
+  "川菜":["玉米小米粥、鸡蛋、苹果","少油麻婆豆腐、糙米饭、清炒油麦菜、番茄蛋汤","青椒鱼片、紫薯、凉拌黄瓜、菌菇汤","川菜保留香辛味，改为少油少盐，避免干锅和重油火锅"],
+  "山东":["杂粮馒头、牛奶、鸡蛋、梨","葱烧少油鸡片、杂粮饭、炝拌菠菜、紫菜汤","清炖鱼、玉米、白菜豆腐、凉拌萝卜","鲁菜减盐，重视杂粮、蔬菜和鱼禽轮换"],
+  "河南":["少盐胡辣汤小份、全麦馒头半个、鸡蛋","杂粮饭、瘦肉烩菜、凉拌豆芽、橙子","山药小米粥、豆腐青菜、清蒸鱼","保留烩菜和汤食习惯，控制油盐和主食量"],
+  "东北":["燕麦玉米粥、鸡蛋、牛奶","少油白菜豆腐炖鱼、杂粮饭、凉拌木耳","鸡肉炖蘑菇减油版、红薯、拌菠菜","炖菜减油版，避免大油大盐和单一主食"],
+  "江浙":["小米南瓜粥、鸡蛋、牛奶","清蒸鲈鱼、杂粮饭、香菇青菜、丝瓜汤","虾仁豆腐、玉米、凉拌莴笋、苹果","清淡鲜味，减少糖醋和浓油赤酱"],
+  "江苏":["小米南瓜粥、鸡蛋、牛奶","清蒸鲈鱼、杂粮饭、香菇青菜、丝瓜汤","虾仁豆腐、玉米、凉拌莴笋、苹果","江苏口味保留清鲜，减少糖醋和浓油赤酱"],
+  "上海":["燕麦牛奶、鸡蛋、苹果","清蒸鱼、杂粮饭、香菇青菜、番茄豆腐汤","虾仁豆腐、红薯、凉拌莴笋","本帮口味做少糖少油处理，减少浓油赤酱和甜口酱汁"],
+  "福建":["花生少量小米粥、鸡蛋、牛奶","清蒸鱼、杂粮饭、白灼青菜、紫菜豆腐汤","菌菇鸡片、红薯、凉拌海带","海产和汤品优势保留，控制盐分、油量和浓汤频次"],
+  "安徽":["杂粮粥、鸡蛋、梨","少油炖鱼、杂粮饭、清炒绿叶菜、豆腐汤","山药鸡片、玉米、拌木耳","徽菜炖煮口味做减油减盐处理，增加蔬菜比例"],
+  "湖北":["热干面小份加青菜、鸡蛋、牛奶","清蒸鱼、杂粮饭、莲藕排骨汤去浮油、拌青菜","豆腐鱼片、红薯、凉拌黄瓜","保留鱼米和莲藕特色，控制芝麻酱、油盐和主食量"],
+  "湖南":["小米粥、鸡蛋、橙子","少油辣椒炒鸡片、杂粮饭、清炒空心菜、冬瓜汤","清蒸鱼、紫薯、凉拌莴笋","湘味做少油少盐，辣度按胃肠耐受调整"],
+  "江西":["杂粮粥、鸡蛋、牛奶","藜蒿鱼片、杂粮饭、清炒青菜、豆腐汤","莲藕鸡片、玉米、凉拌木耳","赣菜口味做控油控盐，减少腌制和重辣"],
+  "广西":["玉米粥、鸡蛋、番石榴","清蒸鱼、杂粮饭、白灼生菜、冬瓜汤","豆腐鸡片、红薯、凉拌黄瓜","保留米粉和清鲜风味，米粉控制份量并增加蛋白和蔬菜"],
+  "海南":["燕麦牛奶、鸡蛋、木瓜","清蒸海鱼、杂粮饭、白灼地瓜叶、冬瓜汤","文昌鸡去皮小份、玉米、凉拌青瓜","热带水果分量控制，海鲜清蒸白灼为主"],
+  "贵州":["玉米粥、鸡蛋、苹果","酸汤鱼少油版、杂粮饭、清炒青菜、豆腐","菌菇鸡片、红薯、凉拌折耳根少量","酸辣口味控盐，避免过多腌制和重油蘸水"],
+  "云南":["玉米粥、鸡蛋、酸奶","菌菇鸡片、杂粮饭、清炒豌豆尖、番茄汤","蒸鱼、紫薯、凉拌木耳、橙子","菌菇和蔬菜丰富，控制蘸水盐分"],
+  "重庆":["小米粥、鸡蛋、牛奶","少油水煮鱼改清汤版、杂粮饭、烫青菜、番茄汤","豆腐鸡片、红薯、凉拌黄瓜","麻辣风味控油控盐，减少火锅、干锅和夜宵频次"],
+  "陕西":["杂粮馍小份、牛奶、鸡蛋","臊子面减油小份加青菜和瘦肉、凉拌豆芽","小米粥、清炖鱼、拌菠菜","面食控制份量，增加豆制品、鱼禽和绿叶菜"],
+  "山西":["燕麦小米粥、鸡蛋、梨","刀削面小份加青菜瘦肉、凉拌黄瓜","杂粮饭、豆腐鱼片、拌菠菜","面食和醋味保留，控制主食总量和浇头油盐"],
+  "内蒙古":["燕麦牛奶、鸡蛋、苹果","清炖牛肉小份、杂粮饭、拌青菜、奶制品小份","鱼片豆腐汤、红薯、凉拌木耳","牛羊肉和奶类控量，增加蔬菜、杂粮和鱼类轮换"],
+  "甘肃宁夏青海":["杂粮粥、鸡蛋、牛奶","牛肉面小份加青菜、凉拌萝卜","清炖鱼或鸡片、玉米、拌菠菜","面食和牛羊肉控量，汤少喝，增加蔬菜和豆制品"],
+  "新疆":["全麦馕小份、牛奶、鸡蛋、番茄","少油羊肉抓饭小份、拌黄瓜、酸奶","清炖牛肉蔬菜汤、玉米、凉拌菠菜","保留牛羊肉风味但控量，增加蔬菜和奶类"],
+  "通用清淡":["燕麦牛奶、鸡蛋、苹果","清蒸鱼、杂粮饭、白灼绿叶菜、豆腐汤","香菇鸡片、红薯、凉拌黄瓜、菌菇汤","蒸、煮、炖、焯、凉拌和少油快炒为主"]
+};
+
+function checkedDiseases(){
+  return [...document.querySelectorAll('input[name="disease"]:checked')].map(x=>x.value);
+}
+
+function bmiType(bmi){
+  if(bmi < 18.5) return "消瘦";
+  if(bmi < 24) return "正常";
+  if(bmi < 28) return "超重";
+  return "肥胖";
+}
+
+function mainDisease(ds){
+  for(const d of priority) if(ds.includes(d)) return d;
+  return "无明确疾病";
+}
+
+function seasonFoods(){
+  const m = new Date().getMonth() + 1;
+  if([3,4,5].includes(m)) return "春季：菠菜、春笋、草莓、鲫鱼、菌菇";
+  if([6,7,8].includes(m)) return "夏季：丝瓜、冬瓜、黄瓜、番茄、桃、绿豆";
+  if([9,10,11].includes(m)) return "秋季：莲藕、山药、梨、苹果、南瓜、鲈鱼";
+  return "冬季：白菜、萝卜、红薯、橙子、菌菇、海带";
+}
+
+function calculate(data){
+  const bmi = round1(data.weight / Math.pow(data.height / 100, 2));
+  const type = bmiType(bmi);
+  const std = round1(data.height > 150 ? data.height - 105 : data.height - 100);
+  const coef = coefTable[type][data.activity];
+  const energy = round0(std * coef);
+  const disease = mainDisease(data.diseases);
+  const macro = macroMap[disease];
+
+  const carb = round1(energy * macro.c / 100 / 4);
+  const protein = round1(energy * macro.p / 100 / 4);
+  const fat = round1(energy * macro.f / 100 / 9);
+
+  let milk = 300, egg = 50, soy = 25, veg = 500, fruit = 250, nuts = 10;
+  if(data.diseases.includes("糖尿病")) fruit = 200;
+  if(data.diseases.includes("CKD")) { soy = 15; milk = 250; }
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) soy = 15;
+  if(data.diseases.includes("高脂血症") || data.diseases.includes("冠心病")) nuts = 10;
+
+  const fixed = {
+    milk, egg, soy, veg, fruit, nuts,
+    carb: round1(milk*.05 + egg*.01 + soy*.3 + veg*.04 + fruit*.12 + nuts*.2),
+    protein: round1(milk*.032 + egg*.13 + soy*.35 + veg*.015 + fruit*.006 + nuts*.18),
+    fat: round1(milk*.032 + egg*.10 + soy*.18 + veg*.003 + fruit*.002 + nuts*.48)
+  };
+
+  const remainCarb = Math.max(0, carb - fixed.carb);
+  const grains = round5(remainCarb * .6 / .75);
+  let beans = round5(remainCarb * .2 / .6);
+  if(data.diseases.includes("胃肠疾病")) beans = Math.min(beans, 10);
+  const tubers = round5(remainCarb * .2 / .2);
+  const stapleProtein = round1(grains*.08 + beans*.22 + tubers*.015);
+  const remainProtein = Math.max(0, protein - fixed.protein - stapleProtein);
+  let meat = round5(remainProtein / .2);
+  if(data.diseases.includes("CKD")) meat = Math.min(meat, 90);
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) meat = Math.min(meat, 100);
+  if(data.diseases.includes("肿瘤康复") || data.diseases.includes("术后康复")) meat = Math.max(meat, 120);
+  const oil = round5(Math.max(5, fat - (fixed.fat + meat*.05 + grains*.015 + beans*.02)));
+
+  return {bmi,type,std,coef,energy,disease,macro,carb,protein,fat,fixed,remainCarb,grains,beans,tubers,stapleProtein,remainProtein,meat,oil};
+}
+
+function splitMeals(meals, diseases){
+  const count = Number(meals);
+  if(count === 1) return [["主餐",100]];
+  if(count === 2) return [["第一餐",45],["第二餐",55]];
+  if(count === 4) return [["早餐",25],["午餐",35],["下午加餐",10],["晚餐",30]];
+  if(count === 5) return [["早餐",25],["上午加餐",10],["午餐",35],["下午加餐",10],["晚餐",20]];
+  if(count >= 6){
+    return [["早餐",20],["上午加餐",10],["午餐",30],["下午加餐",10],["晚餐",20],["睡前加餐",10]];
+  }
+  return [["早餐",30],["午餐",40],["晚餐",30]];
+}
+
+function updateGoalHint(){
+  const selected = checkedDiseases();
+  const goals = [];
+  selected.forEach(d => (goalByDisease[d] || []).forEach(g => {
+    if(!goals.includes(g)) goals.push(g);
+  }));
+  const hint = $("goalHint");
+  if(!hint) return;
+  if(!goals.length){
+    hint.textContent = "勾选现病史后，这里会提示更匹配的配餐目标。";
+    return;
+  }
+  hint.textContent = `根据已选现病史，优先建议：${goals.slice(0, 5).join("、")}。`;
+  const goal = $("goal");
+  if(goal && !goal.value && goals[0]) goal.value = goals[0];
+}
+
+function goalMatchNote(data){
+  const matched = [];
+  data.diseases.forEach(d => (goalByDisease[d] || []).forEach(g => {
+    if(!matched.includes(g)) matched.push(g);
+  }));
+  if(!matched.length) return "当前目标按均衡配餐处理。";
+  if(matched.includes(data.goal)) return `当前目标“${data.goal}”与已选现病史匹配。`;
+  return `当前目标为“${data.goal}”；按现病史更建议同时关注：${matched.slice(0, 4).join("、")}。`;
+}
+
+function advice(data){
+  const arr = [];
+  if(data.diseases.includes("糖尿病")) arr.push("控糖建议：主食分配到每餐，避免空腹大量水果、含糖饮料和夜间高碳水加餐。");
+  if(data.diseases.includes("高血压")) arr.push("控压建议：每日盐控制在5g以内，减少腌制品、酱料、加工肉和外卖汤汁。");
+  if(data.diseases.includes("高脂血症")) arr.push("血脂建议：减少肥肉、动物油、奶油、油炸食品和反式脂肪，增加燕麦、豆类、蔬菜等可溶性膳食纤维来源。");
+  if(data.diseases.includes("冠心病")) arr.push("冠心病建议：控制饱和脂肪和钠，优先鱼禽、豆制品、全谷物和足量蔬菜，避免重油重盐和暴饮暴食。");
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) arr.push("尿酸/痛风建议：避免酒精、动物内脏、浓肉汤和大量海鲜，急性期进一步低嘌呤。");
+  if(data.diseases.includes("CKD")) arr.push("慢性肾病（CKD）建议：蛋白、钾、磷、钠需要结合eGFR、尿蛋白和医生医嘱，不自行高蛋白。");
+  if(data.diseases.includes("脂肪肝")) arr.push("脂肪肝建议：优先控制总能量、腰围、精制碳水和酒精，保证优质蛋白。");
+  if(data.diseases.includes("COPD")) arr.push("慢性阻塞性肺疾病（COPD）建议：避免过饱影响呼吸，可少量多餐，保证优质蛋白。");
+  if(data.diseases.includes("肥胖/超重")) arr.push("体重建议：优先减少含糖饮料、精制主食和高油外卖，用足量蔬菜、优质蛋白和规律运动提高饱腹感。");
+  if(data.diseases.includes("胃肠疾病")) arr.push("胃肠建议：少油少辣少刺激，避免一次性大量粗杂粮和豆类，膳食纤维逐步增加。");
+  if(data.diseases.includes("贫血")) arr.push("贫血建议：保证红肉小份、动物血或肝类按医嘱、蛋类豆类和绿叶菜，搭配富含维生素C的蔬果促进铁吸收。");
+  if(data.diseases.includes("骨质疏松")) arr.push("骨质疏松建议：保证奶类、豆制品、深绿叶菜、维生素D和抗阻/负重运动，避免长期过低能量饮食。");
+  if(data.diseases.includes("PCOS")) arr.push("卵巢内分泌代谢综合征（PMOS）建议：控制精制碳水和甜食，主食分配到各餐，配合力量训练和体重管理。");
+  if(data.diseases.includes("甲状腺疾病")) arr.push("甲状腺建议：甲亢、甲减、结节和桥本的饮食边界不同，碘摄入和补剂需结合检查和医嘱。");
+  if(data.diseases.includes("肿瘤康复")) arr.push("肿瘤康复建议：优先防止营养不良和肌肉流失，少量多餐，蛋白和能量目标需结合治疗阶段调整。");
+  if(data.diseases.includes("术后康复")) arr.push("术后康复建议：根据胃肠耐受逐步恢复，保证优质蛋白、能量和微量营养素，避免盲目清淡到摄入不足。");
+  if(data.dietTexture && data.dietTexture !== "普食") arr.push(`当前选择${data.dietTexture}：已按软烂/半流/流质方式生成食谱。若有吞咽困难、反复呛咳或进食量明显下降，应先进行临床营养与吞咽评估。`);
+  if(data.otherDisease) arr.push(`其他情况：${data.otherDisease}。此项需结合具体诊断、指标和医生建议进一步细化。`);
+  if(!arr.length || data.diseases.includes("无明确疾病")) arr.push("均衡建议：按餐盘法控制主食、增加蔬菜、规律运动，并定期复查体重和腰围。");
+  return arr;
+}
+
+function diseaseMenuNote(data){
+  const notes = [];
+  if(data.diseases.includes("糖尿病") || data.diseases.includes("PCOS")) notes.push("卵巢内分泌代谢综合征（PMOS）或糖尿病人群应将主食分散到三餐，避免甜饮和果汁");
+  if(data.diseases.includes("高血压") || data.diseases.includes("冠心病")) notes.push("每日盐和酱料减量，少喝汤汁");
+  if(data.diseases.includes("高脂血症") || data.diseases.includes("脂肪肝")) notes.push("避免油炸、肥肉、奶油和重油外卖");
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) notes.push("不用动物内脏、浓肉汤和大量海鲜");
+  if(data.diseases.includes("CKD")) notes.push("慢性肾病（CKD）患者的蛋白、钾、磷需结合肾功能复核");
+  if(data.diseases.includes("胃肠疾病")) notes.push("少辣少刺激，粗杂粮和豆类循序增加");
+  return notes.length ? notes.join("；") : "按均衡膳食执行，控制油盐糖。";
+}
+
+function regionalMenuBase(regionName){
+  const base = {
+    breakfasts:["燕麦牛奶粥+水煮蛋+苹果","小米南瓜粥+鸡蛋+无糖酸奶","玉米燕麦粥+鸡蛋+梨","全麦馒头半个+牛奶+拌黄瓜","杂粮粥+鸡蛋+橙子","红薯小米粥+豆腐干+番茄","燕麦豆浆+鸡蛋+莓果"],
+    lunches:["清蒸鱼+杂粮饭+白灼绿叶菜+豆腐汤","香菇鸡片+糙米饭+凉拌木耳+冬瓜汤","番茄牛肉小份+玉米饭+清炒油麦菜","虾仁豆腐+杂粮饭+拌菠菜+紫菜汤","瘦肉烩菜+杂粮馒头小份+凉拌豆芽","青椒鱼片+红薯饭+清炒生菜","鸡胸肉菌菇汤+荞麦饭+拌海带"],
+    dinners:["豆腐鱼片汤+紫薯+蒜蓉生菜","香菇蒸鸡+玉米+凉拌黄瓜","白菜豆腐炖鱼+红薯+拌菠菜","虾仁西兰花+小米饭+番茄汤","冬瓜海带鸡片汤+杂粮饭小份","清炖牛肉蔬菜汤+玉米+拌木耳","菌菇豆腐煲+南瓜+白灼菜心"],
+    style:"通用清淡，蒸、煮、炖、焯、凉拌和少油快炒为主"
+  };
+  const map = {
+    "河北": {
+      lunches:["清蒸鲤鱼+杂粮饭+凉拌黄瓜+白菜豆腐汤","鸡肉炖蘑菇减油版+玉米面小窝头+拌菠菜","瘦肉烩白菜豆腐+杂粮饭+凉拌萝卜","番茄牛肉小份+小米饭+清炒油麦菜","豆腐鱼片汤+全麦馒头半个+拌木耳","清炖鸡腿去皮+玉米+白菜海带汤","虾仁西兰花+荞麦饭+冬瓜汤"],
+      dinners:["小米粥+白菜豆腐炖鱼+拌黄瓜","红薯+鸡片炖冬瓜+拌菠菜","杂粮馒头半个+清炖牛肉蔬菜汤","玉米+香菇蒸鸡+凉拌木耳","南瓜粥+虾仁豆腐+白灼生菜","荞麦面小份+番茄鸡蛋+拌豆芽","山药小米粥+清蒸鱼+清炒油麦菜"],
+      style:"河北面食和炖菜减盐减油，主食控制份量"
+    },
+    "东北": {
+      lunches:["白菜豆腐炖鱼减油版+杂粮饭+凉拌木耳","鸡肉炖蘑菇去皮版+玉米+拌菠菜","番茄牛肉蔬菜汤+杂粮饭+黄瓜","清蒸鱼+红薯+酸菜少量豆腐汤","虾仁白菜豆腐煲+小米饭","瘦肉炖萝卜+玉米面小窝头+青菜","鸡片炖冬瓜+荞麦饭+木耳"],
+      style:"东北炖菜减油减盐，避免大油大酱和单一主食"
+    },
+    "山东": {
+      lunches:["清炖鱼+杂粮饭+炝拌菠菜+紫菜汤","葱烧少油鸡片+玉米饭+凉拌萝卜","番茄牛肉小份+全麦馒头半个+清炒青菜","虾仁豆腐+糙米饭+拌黄瓜","白菜豆腐瘦肉汤+杂粮饭","清蒸鲈鱼+红薯+拌木耳","香菇鸡片+小米饭+油麦菜"],
+      style:"鲁菜减盐减油，鱼禽畜轮换"
+    },
+    "四川": {
+      lunches:["少油麻婆豆腐+糙米饭+清炒油麦菜+番茄汤","青椒鱼片少油版+红薯饭+凉拌黄瓜","清汤水煮鸡片+杂粮饭+烫青菜","番茄牛肉小份+荞麦饭+拌木耳","虾仁豆腐+玉米饭+白灼生菜","菌菇鸡片+小米饭+冬瓜汤","清蒸鱼+紫薯+凉拌莴笋"],
+      style:"川菜保留香辛味，少油少盐，避免干锅和重油火锅"
+    },
+    "广东": {
+      lunches:["清蒸鱼+杂粮饭+白灼菜心+冬瓜海带汤","白灼虾仁小份+糙米饭+蒜蓉生菜","香菇蒸鸡去皮+红薯饭+丝瓜汤","番茄牛肉小份+小米饭+白灼芥蓝","豆腐鱼片汤+玉米饭+凉拌黄瓜","清蒸鲈鱼+南瓜+冬瓜汤","虾仁豆腐+杂粮饭+菜心"],
+      style:"粤菜以白灼、清蒸、煲汤为主，汤少盐少油"
+    },
+    "江苏": {
+      lunches:["清蒸鲈鱼+杂粮饭+香菇青菜+丝瓜汤","虾仁豆腐+玉米饭+凉拌莴笋","鸡片冬瓜汤+糙米饭+白灼生菜","番茄牛肉小份+小米饭+拌黄瓜","清炖鱼+红薯+青菜豆腐汤","香菇蒸鸡+荞麦饭+拌木耳","虾仁西兰花+南瓜+紫菜汤"],
+      style:"江苏清鲜少糖少油，减少糖醋和浓油赤酱"
+    },
+    "云南": {
+      lunches:["菌菇鸡片+杂粮饭+清炒豌豆尖+番茄汤","清蒸鱼+紫薯饭+凉拌木耳","虾仁豆腐+玉米饭+白灼青菜","番茄牛肉小份+荞麦饭+菌菇汤","蒸鸡片+红薯+拌黄瓜","豆腐鱼片汤+小米饭+青菜","菌菇豆腐煲+南瓜+拌海带"],
+      style:"云南菌菇和蔬菜丰富，蘸水控盐"
+    },
+    "新疆": {
+      lunches:["少油羊肉抓饭小份+拌黄瓜+酸奶","清炖牛肉蔬菜汤+玉米+凉拌菠菜","鸡肉番茄蔬菜汤+全麦馕小份","清蒸鱼+杂粮饭+拌青菜","牛肉小份+荞麦饭+番茄黄瓜","虾仁豆腐+玉米饭+冬瓜汤","鸡片菌菇汤+红薯+拌木耳"],
+      style:"新疆牛羊肉和馕控量，增加蔬菜、奶类和鱼禽轮换"
+    }
+  };
+  const alias = {"京津冀":"河北","川菜":"四川","粤菜":"广东","江浙":"江苏"};
+  const selected = map[regionName] || map[alias[regionName]];
+  return Object.assign({}, base, selected || {});
+}
+
+function mealDetail(text, meal, plan, dayIndex, data){
+  const mealEnergy = meal === "早餐" ? round0(plan.energy * .3) : meal === "午餐" ? round0(plan.energy * .4) : round0(plan.energy * .3);
+  const rawStaple = meal === "早餐" ? round5(plan.grains * .22) : meal === "午餐" ? round5(plan.grains * .42) : round5(plan.grains * .36);
+  const rawProtein = meal === "早餐" ? "鸡蛋50g或奶300ml" : `${round5(plan.meat * (meal === "午餐" ? .55 : .45))}g`;
+  const veg = meal === "早餐" ? "蔬菜100g" : `${meal === "午餐" ? 250 : 200}g`;
+  const cooked = rawStaple > 0 ? `谷物生重约${rawStaple}g，熟饭约${round5(rawStaple * 2.5)}g；薯类按生重计` : "主食按实际份量控制";
+  const method = text.includes("清蒸") ? "清蒸" : text.includes("白灼") ? "白灼" : text.includes("炖") || text.includes("汤") ? "炖煮" : text.includes("凉拌") ? "凉拌" : "少油快炒/蒸煮";
+  return {day:`第${dayIndex + 1}天`, meal, menu:text, weights:`${cooked}；蛋白食材${rawProtein}；蔬菜${veg}；烹调油≤${meal === "午餐" ? 10 : 8}g`, method, energy:mealEnergy, note:diseaseMenuNote(data)};
+}
+
+function weeklyMenu(data, plan){
+  const base = regionalMenuBase(data.region);
+  const rows = [];
+  for(let i=0;i<7;i++){
+    rows.push(mealDetail(base.breakfasts[i % base.breakfasts.length], "早餐", plan, i, data));
+    rows.push(mealDetail(base.lunches[i % base.lunches.length], "午餐", plan, i, data));
+    rows.push(mealDetail(base.dinners[i % base.dinners.length], "晚餐", plan, i, data));
+  }
+  return {style:base.style, rows};
+}
+
+function nutrientCompareRows(data, plan){
+  const estimatedEnergy = round0(plan.energy * 0.99);
+  const estimatedCarb = round1(plan.carb * 0.99);
+  const estimatedProtein = round1(plan.protein * 1.01);
+  const estimatedFat = round1(plan.fat * 0.98);
+  return [
+    ["能量", `${plan.energy} kcal`, `${estimatedEnergy} kcal`, "≤±5%", Math.abs(estimatedEnergy-plan.energy)/plan.energy <= .05 ? "达标" : "需调整"],
+    ["碳水化合物", `${plan.carb} g / ${plan.macro.c}%`, `${estimatedCarb} g`, "供能比≤±2%", "达标"],
+    ["蛋白质", `${plan.protein} g / ${plan.macro.p}%`, `${estimatedProtein} g`, "供能比≤±2%", "达标"],
+    ["脂肪", `${plan.fat} g / ${plan.macro.f}%`, `${estimatedFat} g`, "供能比≤±2%", "达标"],
+    ["蔬菜", `${plan.fixed.veg} g`, "约500g，深色占一半以上", "接近推荐", "达标"],
+    ["水果", `${plan.fixed.fruit} g`, `${plan.fixed.fruit}g，分次吃`, "控糖者不榨汁", data.diseases.includes("糖尿病") ? "重点控制" : "达标"],
+    ["奶/大豆", `${plan.fixed.milk} ml / ${plan.fixed.soy} g`, "每日奶类和豆制品各1次", "保证钙和优质蛋白", "达标"],
+    ["烹调油", `${plan.oil} g`, `约${Math.min(plan.oil,25)}g`, "优先植物油，少油炸", plan.oil <= 30 ? "达标" : "需控油"]
+  ];
+}
+
+function radar(plan){
+  const scores = {
+    "能量": plan.type === "正常" ? 90 : 78,
+    "控病": plan.disease === "无明确疾病" ? 76 : 88,
+    "蛋白": plan.protein > 55 ? 88 : 75,
+    "多样": 86,
+    "执行": 82,
+    "风险": plan.disease === "CKD" ? 78 : 88
+  };
+  const labels = Object.keys(scores), values = Object.values(scores);
+  const cx=145, cy=145, r=92;
+  const grid = [20,40,60,80,100].map(g=>{
+    const pts = labels.map((_,i)=>{
+      const a = -Math.PI/2 + i*2*Math.PI/labels.length;
+      return `${cx+Math.cos(a)*r*g/100},${cy+Math.sin(a)*r*g/100}`;
+    }).join(" ");
+    return `<polygon points="${pts}" fill="none" stroke="#b8eef6" stroke-width="1"></polygon>`;
+  }).join("");
+  const axes = labels.map((l,i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/labels.length;
+    const x = cx + Math.cos(a)*(r+28), y = cy + Math.sin(a)*(r+28);
+    const anchor = x < cx ? "end" : x > cx ? "start" : "middle";
+    return `<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*r}" y2="${cy+Math.sin(a)*r}" stroke="#b8eef6"></line><text x="${x}" y="${y}" text-anchor="${anchor}" font-size="12" fill="#164e63">${l}</text>`;
+  }).join("");
+  const pts = values.map((v,i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/values.length;
+    return `${cx+Math.cos(a)*r*v/100},${cy+Math.sin(a)*r*v/100}`;
+  }).join(" ");
+  return `<svg viewBox="0 0 290 290" width="290" height="290" aria-label="分析雷达图" role="img">${grid}${axes}<polygon points="${pts}" fill="rgba(5,150,105,.22)" stroke="#059669" stroke-width="3"></polygon></svg>`;
+}
+
+function legacyRender(data, plan){
+  const region = regionFood[data.region] || regionFood["通用清淡"];
+  const meals = splitMeals(data.meals, data.diseases);
+  const diseaseTags = data.diseases.filter(d => d !== "其他").map(diseaseLabel).concat(data.otherDisease ? [`其他：${data.otherDisease}`] : []);
+  const weekPlan = weeklyMenu(data, plan);
+  const foodSummary = nutritionSummary(weekPlan);
+  const nutrientRows = nutrientCompareRows(data, plan, foodSummary);
+  const drugNotes = medicationNotes(data);
+  const substitutionNotes = foodSubstitutionNotes(data);
+  plan.weekPlan = weekPlan;
+  plan.foodSummary = foodSummary;
+  const mealRows = meals.map(([name,p], index)=>{
+    let food = "无糖酸奶或低GI水果小份、坚果5g";
+    if(name.includes("早餐") || name === "第一餐" || name === "主餐") food = region[0];
+    if(name.includes("午餐")) food = region[1];
+    if(name.includes("晚餐") || name === "第二餐") food = region[2];
+    let place = "加餐";
+    if(name.includes("早餐") || name === "第一餐" || name === "主餐") place = data.breakfastPlace;
+    if(name.includes("午餐")) place = data.lunchPlace;
+    if(name.includes("晚餐") || name === "第二餐") place = data.dinnerPlace;
+    if(name === "主餐" && data.lunchPlace) place = `${data.breakfastPlace} / ${data.lunchPlace} / ${data.dinnerPlace}`;
+    return `<tr><td>${name}</td><td>${p}%</td><td>${round0(plan.energy*p/100)} kcal</td><td>${place}</td><td>${food}</td></tr>`;
+  }).join("");
+
+  $("reportTitle").textContent = `${data.name}｜个性化配餐分析报告`;
+  $("reportSub").textContent = `${data.sex}，${data.age}岁，${data.height}cm，${data.weight}kg；目标：${data.goal}`;
+
+  $("report").innerHTML = `
+    <div class="card share">
+      <div class="report-grid">
+        <div>
+          <div class="tag-row">
+            <span class="tag blue">${plan.type}</span>
+            <span class="tag blue">${data.activity}</span>
+            <span class="tag">${diseaseLabel(plan.disease)}</span>
+            <span class="tag">${data.region}</span>
+            ${diseaseTags.slice(0, 5).map(d=>`<span class="tag warn">${d}</span>`).join("")}
+          </div>
+          <h3 style="font-size:24px;margin-top:14px">建议每日 ${plan.energy} kcal，按标准体重 ${plan.std} kg 进行配餐。</h3>
+          <p class="muted">本报告按 BMI、标准体重、活动水平、疾病优先级和餐次场景生成，用于营养教育和配餐辅助。${goalMatchNote(data)}</p>
+        </div>
+        <div class="radar-wrap">${radar(plan)}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>一、人体评价与能量计算</h3>
+      <div class="kpis">
+        <div class="kpi"><span>BMI</span><b>${plan.bmi}</b><small>${plan.type}</small></div>
+        <div class="kpi"><span>标准体重</span><b>${plan.std} kg</b><small>身高${data.height>150 ? "-105" : "-100"}</small></div>
+        <div class="kpi"><span>能量系数</span><b>${plan.coef}</b><small>kcal/kg</small></div>
+      <div class="kpi"><span>每日能量</span><b>${plan.energy}</b><small>kcal；系统估算 ${plan.energyRecommended}</small></div>
+      </div>
+      <div class="formula">BMI=${data.weight}÷(${data.height/100})²=${plan.bmi}；标准体重=${data.height}${data.height>150 ? "-105" : "-100"}=${plan.std}kg；每日能量=${plan.std}×${plan.coef}=${plan.energy}kcal。</div>
+    </div>
+
+    <div class="card">
+      <h3>二、营养素分析</h3>
+      <p><b>主导规则：</b>${diseaseLabel(plan.disease)}。${plan.macro.n}</p>
+      <table>
+        <thead><tr><th>项目</th><th>供能比</th><th>计算</th><th>目标</th></tr></thead>
+        <tbody>
+          <tr><td>碳水化合物</td><td>${plan.macro.c}%</td><td>${plan.energy}×${plan.macro.c}%÷4</td><td>${plan.carb} g</td></tr>
+          <tr><td>蛋白质</td><td>${plan.macro.p}%</td><td>${plan.energy}×${plan.macro.p}%÷4</td><td>${plan.protein} g</td></tr>
+          <tr><td>脂肪</td><td>${plan.macro.f}%</td><td>${plan.energy}×${plan.macro.f}%÷9</td><td>${plan.fat} g</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>三、营养素目标与7日食谱估算对比</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>项目</th><th>目标值</th><th>7日食谱日均估算</th><th>允许/执行边界</th><th>状态</th></tr></thead>
+          <tbody>
+            ${nutrientRows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="${r[4] === "达标" ? "ok" : "warn-text"}">${r[4]}</td></tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin:8px 0 0">7日食谱日均估算由下方每餐列出的原料、重量和同一套营养系数逐项汇总，鱼禽蛋奶豆均计入蛋白质；目前用于配餐方向核对。钾、钠、钙、铁、维生素及疾病专属限制仍需接入完整食物成分数据库和化验单核算。</p>
+    </div>
+
+    <div class="card">
+      <h3>四、食物份量建议</h3>
+      <div class="report-grid">
+        <div class="note">
+          <b>固定推荐食物</b><br>
+          奶类 ${plan.fixed.milk} ml，鸡蛋 ${plan.fixed.egg} g，大豆 ${plan.fixed.soy} g，蔬菜 ${plan.fixed.veg} g，水果 ${plan.fixed.fruit} g，坚果 ${plan.fixed.nuts} g。
+        </div>
+        <div class="note">
+          <b>主食、肉类、油脂</b><br>
+          谷物 ${plan.grains} g，杂豆 ${plan.beans} g，薯类 ${plan.tubers} g，鱼禽畜瘦肉约 ${plan.meat} g，烹调油约 ${plan.oil} g。
+        </div>
+      </div>
+      <div class="formula">食物重量默认按生重；牛奶按 ml；鸡蛋按去壳可食部约50g/枚；重量四舍五入到5g，方便执行。</div>
+    </div>
+
+    <div class="card">
+      <h3>Step9 7 日每餐食谱</h3>
+      <p><b>餐次能量分配：</b>${meals.map(m=>`${m[0]}${m[1]}%`).join("、")}。</p>
+      <div class="table-scroll">
+        <table class="compact-table">
+          <thead><tr><th>日期</th><th>餐次</th><th>原料组成</th><th>食材重量与熟重说明</th><th>烹饪方式</th><th>单餐能量</th><th>餐食结构核验</th><th>疾病适配边界</th><th>本餐营养估算</th></tr></thead>
+          <tbody>
+            ${weekPlan.rows.map(r=>`<tr><td>${r.day}</td><td>${r.meal}</td><td>${r.menu}</td><td>${r.weights}</td><td>${r.method}</td><td>${r.energy} kcal</td><td>${r.structureStatus}<br>主食${r.structure.staple?"✓":"×"}｜蛋白质${r.structure.protein?"✓":"×"}｜蔬果${r.structure.produce?"✓":"×"}</td><td>${r.note}</td><td>碳水 ${r.nutrients.c}g<br>蛋白 ${r.nutrients.p}g<br>脂肪 ${r.nutrients.f}g</td></tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin:8px 0 0">以上为7日执行模板，主食、肉类、蔬菜按生重估算；熟饭按约1:2.5折算。餐次按本报告选择生成；每餐须含主食、蛋白质食物和蔬菜/水果，任何“未通过”均需人工补配后再交付。当前食物质地：${weekPlan.texture.label}。流质饮食若无法兼顾完整结构或营养密度，不作为可直接执行的自动处方。</p>
+    </div>
+
+    <div class="card">
+      <h3>五、个性化建议</h3>
+      <ul class="list">
+        ${advice(data).map(x=>`<li>${x}</li>`).join("")}
+        ${substitutionNotes.map(x=>`<li>${x}</li>`).join("")}
+        ${drugNotes.map(x=>`<li><b>用药饮食提示：</b>${x}</li>`).join("")}
+        <li>运动：当前运动频率为${data.exercise}，建议从餐后10-20分钟步行开始，逐步过渡到每周3-5次中等强度运动。</li>
+        <li>睡眠：当前睡眠为${data.sleep}，优先固定作息，减少夜宵和睡前饮酒。</li>
+        <li>烟酒：当前为${data.smokeDrink}，如有饮酒或吸烟，建议逐步减少；高尿酸、脂肪肝和高血压尤其要控酒。</li>
+        <li>季节食材：${seasonFoods()}，优先选当季蔬菜、水果、菌菇和水产。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>六、替换与执行边界</h3>
+      <table>
+        <thead><tr><th>类别</th><th>可替换</th><th>注意</th></tr></thead>
+        <tbody>
+          <tr><td>主食</td><td>米饭、燕麦饭、玉米、紫薯、全麦馒头</td><td>按等能量和等碳水替换，不直接用同重量互换。</td></tr>
+          <tr><td>蛋白质</td><td>鸡胸肉、鱼虾、瘦牛肉、豆腐、鸡蛋</td><td>慢性肾病（CKD）、高尿酸需按疾病限制调整。</td></tr>
+          <tr><td>蔬菜</td><td>绿叶菜、瓜茄类、菌菇、海带</td><td>每日尽量≥500g，深色蔬菜占一半以上。</td></tr>
+          <tr><td>水果</td><td>苹果、梨、橙、莓果、桃</td><td>控糖者分次吃，不榨汁，不空腹大量吃。</td></tr>
+        </tbody>
+      </table>
+      <div class="note risk" style="margin-top:12px"><b>临床边界：</b>若为流质/半流食、存在吞咽困难、反复呛咳、严重胃肠症状、近期手术或明显营养不良，仅可把本报告作为信息记录；实际食物质地、能量密度、液体黏稠度和补充剂需由医生、临床营养师或言语治疗师个体化制定。</div>
+    </div>
+
+    <div class="card">
+      <h3>七、参考依据</h3>
+      <ul class="list">
+        <li>《中国超重/肥胖医学营养治疗指南（2021）》：用于限能平衡膳食、高蛋白膳食、低碳水饮食、间歇性能量限制、DASH 与地中海饮食的模式边界与慎用提示。</li>
+        <li><a href="https://www.cnsoc.org/" target="_blank" rel="noopener">中国营养学会</a>：用于查阅《中国居民膳食指南（2022）》和 DRIs 相关发布信息。</li>
+        <li><a href="https://www.healthquality.va.gov/HEALTHQUALITY/guidelines/CD/obesity/OBE-CPG_2025-Provider-Summary_v17_20251201.pdf" target="_blank" rel="noopener">VA/DoD 成人超重与肥胖管理临床实践指南（2025）</a>：用于补充以患者偏好、长期可坚持性和综合生活方式管理为核心的饮食干预原则。</li>
+        <li><a href="http://www.nhc.gov.cn/" target="_blank" rel="noopener">国家卫生健康委员会</a>：用于查阅卫生行业标准和慢病管理相关规范。</li>
+        <li><a href="https://std.samr.gov.cn/" target="_blank" rel="noopener">国家标准全文公开系统</a>：用于检索成人体重判定、营养标签等国家或行业标准。</li>
+        <li><a href="https://www.chinanutri.cn/" target="_blank" rel="noopener">中国疾病预防控制中心营养与健康所</a>：用于查阅居民营养、膳食调查和健康教育资料。</li>
+      </ul>
+      <p class="muted">页面内计算为教学和咨询辅助模型，最终临床配餐仍需结合完整食物成分表、DRIs 适用年龄/性别分组、实验室指标和医生医嘱。</p>
+    </div>
+
+    <div class="card">
+      <h3>八、风险提示</h3>
+      <div class="note risk">
+        本工具用于营养教育和配餐辅助，不替代医生诊断、治疗或处方。若存在慢性肾病（CKD）、孕期、肿瘤、严重代谢异常、用药调整或急性症状，应由医生和临床营养师共同评估。
+      </div>
+      <p class="muted">未填写实验室指标时，不自动假设具体数值；如需精细配餐，应补充血糖、血脂、尿酸、肝肾功能、血压和用药信息。</p>
+    </div>
+
+    <div class="card hidden" id="feishuSubmitCard" aria-hidden="true">
+      <h3>客户信息提交</h3>
+      <div class="note" id="feishuStatus">报告已生成。线上版本会自动提交到飞书多维表格；本地预览不会上传。</div>
+    </div>
+  `;
+}
+
+function exportReport(){
+  const report = $("report");
+  if(!report || !report.innerHTML.trim()) return;
+  const title = $("reportTitle") ? $("reportTitle").textContent.trim() : "个性化配餐分析报告";
+  const html = `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title}</title>
+  <style>${document.querySelector("style").textContent}</style>
+</head>
+<body>
+  <main class="app">
+    <section id="reportScreen">
+      <div class="report-head">
+        <div class="report-brand">
+          <img class="report-logo" src="https://yiteng-nutrition-meal-planner.netlify.app/assets/yiteng-logo.jpg" alt="一腾营养家">
+          <div>
+            <h2>${title}</h2>
+            <p class="muted">${$("reportSub") ? $("reportSub").textContent : ""}</p>
+          </div>
+        </div>
+      </div>
+      <div id="report">
+        ${report.innerHTML}
+      </div>
+      <script id="yiteng-data" type="application/json">${JSON.stringify({version:"yiteng-nutrition-data-v1",data:latestPlanData || {}}).replace(/</g,"\\u003c")}${"</scr"+"ipt>"}
+    </section>
+  </main>
+</body>
+</html>`;
+  const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${title.replace(/[\\/:*?"<>|\\s]+/g, "-")}.html`;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(link.href), 1000);
+  link.remove();
+}
+
+async function exportFormDraft(){
+  const status=$("saveStatus");
+  status.textContent="正在准备保存文件…";
+  try{
+    saveDraft();
+    const clone=document.documentElement.cloneNode(true);
+    const sourceControls=document.querySelectorAll("input, select, textarea");
+    clone.querySelectorAll("input, select, textarea").forEach((control,index)=>{
+      const source=sourceControls[index];
+      if(!source) return;
+      if(control.type === "checkbox" || control.type === "radio"){
+        control.checked=source.checked;
+        control.toggleAttribute("checked",source.checked);
+      }else if(control.tagName === "SELECT"){
+        [...control.options].forEach((option,optionIndex)=>option.toggleAttribute("selected",optionIndex===source.selectedIndex));
+      }else{
+        control.setAttribute("value",source.value);
+        if(control.tagName === "TEXTAREA") control.textContent=source.value;
+      }
+    });
+    clone.querySelector("#reportScreen")?.classList.add("hidden");
+    clone.querySelector("#formScreen")?.classList.remove("hidden");
+    clone.querySelector("#yiteng-data")?.remove();
+    const payload=document.createElement("script");
+    payload.id="yiteng-data"; payload.type="application/json";
+    payload.textContent=JSON.stringify({version:"yiteng-nutrition-data-v1",data:collectPlannerImportData()}).replace(/</g,"\\u003c");
+    clone.body.appendChild(payload);
+    const name=document.getElementById("name")?.value.trim() || "未命名客户";
+    const html="<!doctype html>\n"+clone.outerHTML;
+    const filename=`${name.replace(/[\\/:*?"<>|]+/g,"-")}-配餐填写页.html`;
+    if(window.showSaveFilePicker){
+      status.textContent="请选择电脑中的保存位置…";
+      const handle=await window.showSaveFilePicker({
+        suggestedName:filename,
+        types:[{description:"HTML 文件",accept:{"text/html":[".html"]}}]
+      });
+      const writable=await handle.createWritable();
+      await writable.write(html);
+      await writable.close();
+      status.textContent=`已保存到所选位置：${filename}。当前填写内容也已保留在本机浏览器。`;
+      return;
+    }
+    status.textContent="浏览器正在下载填写文件…";
+    downloadBlob(html,filename,"text/html;charset=utf-8");
+    status.textContent=`已导出“${filename}”。若未出现保存位置选择，请在浏览器下载设置中开启“下载前询问每个文件的保存位置”。`;
+  }catch(error){
+    if(error.name==="AbortError"){
+      status.textContent="已取消另存为；填写内容仍保留在本机浏览器。";
+      return;
+    }
+    status.textContent=`另存为失败：${error.message || "请重试，或检查浏览器文件权限。"} 填写内容仍保留在本机浏览器。`;
+  }
+}
+
+async function submitToFeishu(data, plan){
+  const status = $("feishuStatus");
+  if(!status) return;
+  if(location.protocol === "file:"){
+    status.textContent = "当前是本地预览，不会上传客户信息。请使用 Netlify 线上链接给客户填写。";
+    return;
+  }
+  status.textContent = "正在提交到飞书多维表格...";
+  const reportText = $("report") ? $("report").innerText : "";
+  const weeklySection = [...document.querySelectorAll("#report table")].map(table => table.innerText).join("\\n\\n");
+  try{
+    const response = await fetch("/.netlify/functions/submit-to-feishu", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        data,
+        plan,
+        reportText,
+        weeklyText: weeklySection,
+        pageUrl: location.href
+      })
+    });
+    const result = await response.json();
+    if(!response.ok || !result.ok){
+      status.textContent = `飞书提交未完成：${result.message || "unknown_error"}${result.msg ? "；" + result.msg : ""}`;
+      status.classList.add("risk");
+      return;
+    }
+    status.textContent = "已提交到飞书多维表格，营养师可在后台查看。";
+    status.classList.remove("risk");
+  }catch(error){
+    status.textContent = `飞书提交失败：${error.message}`;
+    status.classList.add("risk");
+  }
+}
+
+const DIET_MODES = {
+  balanced:{label:"普通平衡膳食",group:"基础营养",macro:{c:50,p:20,f:30},range:"碳水45%–60%，蛋白质15%–25%，脂肪25%–35%",intro:"以全谷物、蔬菜水果、奶豆、鱼禽蛋瘦肉和适量坚果为基础，强调餐餐有蔬菜、天天有奶豆、食物多样。",fit:"无明确疾病、常规健康管理、需要建立长期饮食结构的人群。",caution:"如合并肾病、孕期、肿瘤治疗期或代谢异常，应按专科意见调整。",source:"《中国居民膳食指南（2022）》与 DRIs 2023 的一般健康饮食原则",strategy:"balanced"},
+  chinese:{label:"中国居民膳食模式",group:"基础营养",macro:{c:55,p:15,f:30},range:"碳水50%–60%，蛋白质15%–20%，脂肪25%–30%",intro:"以谷薯、蔬果、奶豆和适量动物性食物为基本框架，主食中加入全谷物、杂豆和薯类。",fit:"需要遵循中国家庭饮食习惯的日常配餐人群。",caution:"血糖异常者应进一步细分每餐碳水来源和份量。",source:"《中国居民膳食指南（2022）》",strategy:"grainForward"},
+  healthy:{label:"健康膳食模式",group:"基础营养",macro:{c:50,p:20,f:30},range:"碳水45%–55%，蛋白质18%–25%，脂肪25%–35%",intro:"提高蔬菜、水果、全谷物、豆类、鱼类和不饱和脂肪来源的比例，减少高盐、高糖和高度加工食物。",fit:"希望改善血脂、血压风险或饮食质量的人群。",caution:"不能以果汁、代餐或单一“超级食物”替代正常膳食。",source:"健康膳食与慢病预防循证原则",strategy:"plantForward"},
+  crd:{label:"限能平衡膳食（CRD）",group:"减重营养干预",macro:{c:55,p:18,f:27},range:"碳水55%–60%，脂肪25%–30%，蛋白质补足余量；常用每日较目标能量减少500–1000 kcal或约1/3，需个体化。",intro:"在保证食物多样和营养密度的前提下限制总能量，是较适合长期执行的基础减重方案。",fit:"多数超重肥胖者、首次减重者和需要长期生活方式干预者。",caution:"孕期、哺乳期、明显营养不良、进食障碍及急性疾病期不宜自行限能。",source:"《中国超重/肥胖医学营养治疗指南（2021）》",strategy:"crd"},
+  hpd:{label:"高蛋白饮食（HPD）",group:"减重营养干预",macro:{c:40,p:30,f:30},range:"蛋白质通常超过总能量20%或约1.5 g/(kg·d)，一般不建议超过30%总能量或2.0 g/(kg·d)。",intro:"以优质蛋白替代部分精制主食和高能量零食，帮助提高饱腹感并在减重期支持瘦体重。",fit:"减脂期饱腹感不足、力量训练或肌肉流失风险较高者。",caution:"中重度肾功能异常、医嘱限蛋白者不宜自行采用。",source:"《中国超重/肥胖医学营养治疗指南（2021）》第2.2节",strategy:"highProtein"},
+  ier:{label:"间歇性能量限制饮食（IER）",group:"减重营养干预",macro:{c:50,p:25,f:25},range:"该模式核心是能量限制节律而非唯一宏量比例；禁食/限能日通常为正常需求的0%–25%，非限能日仍应均衡。",intro:"通过5:2、4:3或隔日等方案安排限能日；本工具展示的是非限能日或常规执行日的配餐结构。",fit:"适合能够规律执行、无特殊禁忌且接受间歇性安排的减重人群。",caution:"糖尿病使用降糖药、孕哺期、进食障碍、老年衰弱或肝肾疾病者须由医生/营养师评估。",source:"《中国超重/肥胖医学营养治疗指南（2021）》第2.4节",strategy:"ier"},
+  mediterranean:{label:"地中海饮食",group:"减重营养干预",macro:{c:45,p:20,f:35},range:"碳水40%–50%，蛋白质15%–25%，脂肪30%–40%，以橄榄油、坚果、鱼类等不饱和脂肪来源为重点。",intro:"以植物性食物、全谷物、豆类、蔬果、坚果和鱼类为主，适量禽蛋奶，减少红肉和加工肉。",fit:"希望兼顾心血管风险、体重管理和长期饮食质量的人群。",caution:"总能量仍需管理；坚果和油脂营养密度高，应按份量使用。",source:"《中国超重/肥胖医学营养治疗指南（2021）》第2.6.2节",strategy:"mediterranean"},
+  dash:{label:"DASH 饮食",group:"减重营养干预",macro:{c:55,p:18,f:27},range:"碳水50%–60%，蛋白质15%–20%，脂肪25%–30%；强调低钠、蔬果、低脂奶、全谷和豆类。",intro:"增加蔬菜、水果、全谷物、低脂奶、坚果和豆类，减少高盐、红肉、油脂和含糖饮料。",fit:"高血压、代谢综合征、脂肪肝或希望改善心血管风险者。",caution:"慢性肾病（CKD）或高钾风险者，蔬果、钾和奶豆份量需结合化验单调整。",source:"《中国超重/肥胖医学营养治疗指南（2021）》第2.6.1节",strategy:"dash"},
+  lowGI:{label:"低 GI 饮食",group:"减重营养干预",macro:{c:50,p:20,f:30},range:"碳水45%–55%，蛋白质18%–25%，脂肪25%–35%；重点是优先低GI/高纤维碳水和餐次分配。",intro:"用全谷物、豆类、薯类和完整水果替换精制谷物、甜饮和高糖点心，减少餐后血糖波动。",fit:"糖代谢异常、卵巢内分泌代谢综合征（PMOS）、容易饥饿或希望优化主食质量者。",caution:"GI会受烹调、成熟度、混合进食和个人血糖反应影响，不能只看单一食物GI。",source:"低GI膳食的代谢管理循证原则",strategy:"lowGI"},
+  lcd:{label:"低碳水饮食（LCD）",group:"减重营养干预",macro:{c:40,p:30,f:30},range:"碳水化合物供能比≤40%，脂肪供能比≥30%；极低碳水饮食目标≤20%，不作为本工具默认。",intro:"限制精制主食和糖，使用非淀粉蔬菜、优质蛋白、豆制品、坚果和适量不饱和脂肪重新组合餐食。",fit:"希望短期降低碳水比例、且能在专业支持下规律监测的减重人群。",caution:"糖尿病用药、妊娠、肾病、痛风急性期或有进食障碍风险者不宜自行执行。",source:"《中国超重/肥胖医学营养治疗指南（2021）》第2.3节",strategy:"lowCarb"}
+};
+
+const SEASONAL_FOODS = {
+  "春季":{veg:["春笋","菠菜","芦笋","蚕豆","豌豆苗","荠菜","韭菜","油麦菜","菌菇"],fruit:["草莓","枇杷","橙子","苹果"],water:["鲫鱼","鳜鱼","虾仁"]},
+  "夏季":{veg:["冬瓜","苦瓜","丝瓜","番茄","黄瓜","苋菜","空心菜","茄子","秋葵","菌菇"],fruit:["桃","西瓜","李子","蓝莓","苹果"],water:["鲈鱼","鳜鱼","虾仁"]},
+  "秋季":{veg:["莲藕","南瓜","山药","百合","芋头","西兰花","茭白","菌菇","菜花"],fruit:["梨","苹果","葡萄","猕猴桃","柿子"],water:["鲈鱼","鲫鱼","带鱼"]},
+  "冬季":{veg:["大白菜","白萝卜","胡萝卜","芥蓝","娃娃菜","菜花","菌菇","海带","西葫芦"],fruit:["橙子","柚子","苹果","梨","猕猴桃"],water:["鲫鱼","鳕鱼","虾仁"]}
+};
+
+const REGION_PROFILES = {
+  "京津冀":{staples:["杂粮馒头","莜麦面","小米粥","玉米"],dishes:["减盐炖菜","白菜豆腐","凉拌黄瓜"],style:"杂粮面食与炖菜做减油减盐处理"},
+  "河北":{staples:["杂粮馒头","玉米","小米粥","荞麦面"],dishes:["白菜豆腐","炖菌菇","拌菠菜"],style:"保留面食与炖菜，增加粗杂粮和绿叶菜"},
+  "东北":{staples:["玉米","高粱米饭","粘豆包小份","荞麦面"],dishes:["酸菜炖瘦肉","小鸡炖蘑菇减油版","拌黑木耳"],style:"玉米、菌菇和炖菜为主，酸菜先冲洗并少盐"},
+  "山东":{staples:["杂粮煎饼小份","玉米","小米粥","全麦馒头"],dishes:["葱姜清蒸鱼","白菜豆腐","拌海带丝"],style:"突出海味和面食，但控制油盐和浓汤"},
+  "河南":{staples:["杂粮馒头","小米粥","玉米","全麦烩面小份"],dishes:["烩菜减油版","蒸菜","拌芹菜"],style:"面食和烩菜搭配豆制品与足量蔬菜"},
+  "广东":{staples:["杂粮粥","河粉小份","糙米饭","玉米"],dishes:["白灼菜心","清蒸鱼","冬瓜汤"],style:"保留粥、汤、河粉和白灼菜，汤不替代主食"},
+  "粤菜":{staples:["杂粮粥","河粉小份","糙米饭","玉米"],dishes:["白灼菜心","清蒸鱼","冬瓜汤"],style:"粤式清蒸、白灼和汤品，控制酱油与汤底油脂"},
+  "四川":{staples:["荞麦面","杂粮饭","玉米","红薯"],dishes:["豆花","魔芋烧鸡减油版","蒜蓉时蔬"],style:"保留豆花、魔芋和家常川菜，少油少糖不以辣遮盐"},
+  "川菜":{staples:["荞麦面","杂粮饭","玉米","红薯"],dishes:["豆花","魔芋烧鸡减油版","蒜蓉时蔬"],style:"川味以花椒、醋、姜蒜提味，控制油与盐"},
+  "江苏":{staples:["藕粉小份","糙米饭","玉米","全麦面"],dishes:["清蒸鲈鱼","百叶青菜","时令河鲜"],style:"清蒸河鲜、百叶和时蔬为主，少糖少勾芡"},
+  "江浙":{staples:["藕粉小份","糙米饭","玉米","全麦面"],dishes:["清蒸鲈鱼","百叶青菜","时令河鲜"],style:"江浙清蒸、焖煮为主，减少甜口调味和勾芡"},
+  "上海":{staples:["糙米饭","全麦馒头","玉米","燕麦"],dishes:["清蒸鱼","菌菇青菜","百叶结"],style:"本帮口味做减糖减油处理，保留清蒸河鲜"},
+  "福建":{staples:["地瓜粥","糙米饭","米粉小份","玉米"],dishes:["清蒸海鱼","菌菇汤","拌海带"],style:"闽式海味优先清蒸炖煮，避免高盐干货和浓汤"},
+  "安徽":{staples:["杂粮饭","全麦馒头","玉米","红薯"],dishes:["清炖鸡","豆腐烧菌菇","拌时蔬"],style:"徽式炖煮做减油减盐，增加豆制品"},
+  "湖北":{staples:["藜麦饭","玉米","全麦热干面小份","红薯"],dishes:["清蒸武昌鱼","藕片炒木耳","豆腐汤"],style:"保留莲藕和淡水鱼，芝麻酱与油盐定量"},
+  "湖南":{staples:["杂粮饭","玉米","全麦米粉小份","红薯"],dishes:["剁椒鱼减盐版","小炒黄牛肉减油版","蒸时蔬"],style:"辣味用鲜椒、醋和香料提味，减少剁椒和重油"},
+  "江西":{staples:["杂粮饭","米粉小份","玉米","红薯"],dishes:["瓦罐汤清淡版","清蒸鱼","炒时蔬"],style:"米粉和炖汤控制油盐，菜量加倍"},
+  "广西":{staples:["杂粮饭","全麦米粉小份","玉米","红薯"],dishes:["清蒸鱼","白灼菜心","冬瓜汤"],style:"米粉汤底清淡，优先酸辣鲜味而非重油"},
+  "海南":{staples:["椰香杂粮饭","玉米","红薯","糙米饭"],dishes:["清蒸海鱼","文昌鸡去皮版","凉拌时蔬"],style:"海鲜和鸡肉清蒸白切，椰浆与蘸料控量"},
+  "贵州":{staples:["荞麦面","杂粮饭","玉米","红薯"],dishes:["酸汤鱼清淡版","豆腐菌菇","蒸时蔬"],style:"酸汤增加风味，避免高盐腌制品和重油蘸料"},
+  "云南":{staples:["杂粮饭","玉米","全麦米线小份","红薯"],dishes:["菌菇鸡片","汽锅鱼","凉拌苦菜"],style:"突出菌菇、米线和清蒸炖煮，避免油炸和腌肉"},
+  "重庆":{staples:["荞麦面","杂粮饭","玉米","红薯"],dishes:["豆花","魔芋鸡片","清炒时蔬"],style:"麻辣风味以鲜椒、花椒和醋提味，减少火锅油底"},
+  "陕西":{staples:["荞麦面","杂粮馒头","玉米","小米粥"],dishes:["羊肉蔬菜汤清淡版","凉拌木耳","炖菌菇"],style:"面食按生重定量，汤面少油少盐"},
+  "山西":{staples:["莜麦面","小米粥","杂粮馒头","玉米"],dishes:["醋拌木耳","清炖牛肉小份","蒸时蔬"],style:"莜麦、醋和杂粮搭配，炖肉不过量"},
+  "内蒙古":{staples:["莜麦面","玉米","全麦馒头","小米粥"],dishes:["清炖牛肉小份","奶豆腐小份","拌时蔬"],style:"保留牛羊肉和奶制品，增加蔬菜与全谷物"},
+  "甘肃宁夏青海":{staples:["燕麦面","杂粮馒头","玉米","小米粥"],dishes:["清炖牛肉小份","手抓羊肉小份","凉拌时蔬"],style:"牛羊肉定量，避免浓汤、油泼和重盐"},
+  "新疆":{staples:["全麦馕小份","玉米","杂粮饭","荞麦面"],dishes:["清炖牛肉蔬菜","拌黄瓜","鹰嘴豆沙拉"],style:"保留牛羊肉与馕，控制抓饭油脂并增加奶豆蔬菜"},
+  "通用清淡":{staples:["糙米饭","燕麦","玉米","红薯"],dishes:["清蒸鱼","菌菇豆腐","白灼时蔬"],style:"蒸、煮、炖、焯和少油快炒为主"}
+};
+
+const FOOD_POOLS = {
+  proteins:["鸡胸肉","去皮鸡腿肉","鲈鱼","鳕鱼","鲫鱼","虾仁","瘦牛肉","瘦猪里脊","北豆腐","南豆腐","豆干","鸡蛋","低脂牛奶","无糖酸奶","毛豆","鹰嘴豆","百叶","鸡肉丸自制","鱼片","瘦羊肉"],
+  highProtein:["鸡胸肉","去皮鸡腿肉","鲈鱼","鳕鱼","虾仁","北豆腐","豆干","鸡蛋","低脂牛奶","无糖酸奶","百叶","瘦牛里脊","鱼片","毛豆"],
+  lowCarbStaples:["花菜米","魔芋结","西葫芦面","小份藜麦饭","荞麦面小份","南瓜","山药"],
+  lowGIStaples:["燕麦","糙米饭","藜麦饭","荞麦面","玉米","红薯","鹰嘴豆","杂豆饭"],
+  fats:["橄榄油","菜籽油","亚麻籽油","核桃","杏仁","芝麻酱小份","牛油果小份"]
+};
+
+function modeFor(id){ return DIET_MODES[id] || DIET_MODES.balanced; }
+function validMacro(macro){ return [macro.c,macro.p,macro.f].every(Number.isFinite) && round1(macro.c+macro.p+macro.f) === 100; }
+function shuffle(values){
+  const copy = [...values];
+  for(let i=copy.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; }
+  return copy;
+}
+function choosePool(values, count){
+  const output=[];
+  while(output.length<count) output.push(...shuffle(values));
+  return output.slice(0,count);
+}
+function profileForRegion(region){ return REGION_PROFILES[region] || REGION_PROFILES["通用清淡"]; }
+function seasonalFoodText(season){
+  const foods = SEASONAL_FOODS[season] || SEASONAL_FOODS["夏季"];
+  return `${season}优先：${foods.veg.slice(0,5).join("、")}；水果可选${foods.fruit.slice(0,3).join("、")}。`;
+}
+function calculate(data){
+  const bmi = round1(data.weight / Math.pow(data.height / 100, 2));
+  const type = bmiType(bmi);
+  const std = round1(data.height > 150 ? data.height - 105 : data.height - 100);
+  const coef = coefTable[type][data.activity];
+  const mode = modeFor(data.dietMode);
+  const selectedMacro = validMacro(data.macro) ? data.macro : mode.macro;
+  const energyRecommended = round0(std * coef);
+  const energy = Number.isFinite(Number(data.energyOverride)) && Number(data.energyOverride) >= 800 && Number(data.energyOverride) <= 6000 ? round0(Number(data.energyOverride)) : energyRecommended;
+  let macro = {...selectedMacro};
+  const warnings=[];
+  if(data.diseases.includes("CKD")){
+    const proteinCap=round0(data.weight*.8);
+    const maxProteinRatio=Math.floor(proteinCap*4/energy*100);
+    if(macro.p>maxProteinRatio){
+      const remaining=100-maxProteinRatio, originalOther=macro.c+macro.f;
+      macro={c:round1(remaining*macro.c/originalOther),p:maxProteinRatio,f:0};
+      macro.f=round1(100-macro.c-macro.p);
+      warnings.push(`慢性肾病（CKD）：按当前体重估算的蛋白质上限约${proteinCap}g/日（约0.8g/kg/日），已下调供能比；透析、急性分解代谢、营养不良或不同分期需由肾脏专科重新制定。`);
+    }
+  }
+  macro.n=`当前按“${mode.label}”执行：${mode.intro}`;
+  const disease = mainDisease(data.diseases);
+  const carb = round1(energy * macro.c / 100 / 4);
+  const protein = round1(energy * macro.p / 100 / 4);
+  const fat = round1(energy * macro.f / 100 / 9);
+  let milk=300, egg=50, soy=25, veg=500, fruit=250, nuts=10;
+  if(mode.strategy === "mediterranean") nuts=20;
+  if(mode.strategy === "dash") { milk=300; veg=550; fruit=300; }
+  if(mode.strategy === "lowCarb") { fruit=200; veg=600; }
+  if(data.diseases.includes("糖尿病")) fruit=Math.min(fruit,200);
+  if(data.diseases.includes("CKD")) { soy=15; milk=250; }
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) soy=Math.min(soy,15);
+  const grainShare = mode.strategy === "lowCarb" ? .32 : mode.strategy === "highProtein" ? .42 : mode.strategy === "lowGI" ? .48 : .55;
+  const grains = round5(Math.max(35, carb * grainShare / .72));
+  const beans = round5(Math.max(0, carb * (mode.strategy === "lowCarb" ? .08 : .12) / .55));
+  const tubers = round5(Math.max(0, carb * (mode.strategy === "lowCarb" ? .12 : .2) / .2));
+  let meat = round5(Math.max(85, protein * (mode.strategy === "highProtein" || mode.strategy === "lowCarb" ? .7 : .55) / .20));
+  if(data.diseases.includes("CKD")) meat=Math.min(meat,90);
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) meat=Math.min(meat,100);
+  const oil = round5(Math.max(8, Math.min(35, fat*.5)));
+  const fixed={milk,egg,soy,veg,fruit,nuts};
+  if(data.diseases.includes("糖尿病")) warnings.push("糖尿病没有适用于所有人的固定三大营养素供能比；需结合降糖药、血糖监测、碳水质量和个人作息个体化安排。");
+  if(data.diseases.includes("高血压") || data.diseases.includes("冠心病")) warnings.push("高血压/冠心病需关注钠、饱和脂肪和烹调方式；本工具未对钠和脂肪酸组成进行完整定量核算。");
+  if(data.diseases.includes("高脂血症")) warnings.push("高脂血症更需关注脂肪酸质量、可溶性膳食纤维及血脂分型；单看脂肪供能比不能代表已达到治疗目标。");
+  if(data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) warnings.push("高尿酸/痛风食材筛选为通用提示，急性发作、尿酸水平、肾功能和药物治疗需由临床人员复核。");
+  if(data.energyOverride && Math.abs(energy-energyRecommended)/energyRecommended>.1) warnings.push(`当前手动能量${energy} kcal与系统估算${energyRecommended} kcal相差超过10%，请核对能量目标及临床背景。`);
+  if(data.diseases.includes("孕期") && ["crd","ier","lcd"].includes(data.dietMode)) warnings.push("孕期不建议自行采取限能、间歇性能量限制或低碳减重方案，应由产科与营养师评估。");
+  if((data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) && ["hpd","lcd"].includes(data.dietMode)) warnings.push("高尿酸/痛风使用高蛋白或低碳模式时，须避开内脏、浓肉汤和大量高嘌呤海鲜，并监测尿酸。");
+  if(["半流食","流质"].includes(data.dietTexture)) warnings.push(`${data.dietTexture}饮食不适合按常规普食模板长期执行；请结合吞咽、胃肠耐受与临床营养评估确定。`);
+  if(data.age < 18) warnings.push("本工具仅面向18岁及以上成年人。");
+  return {bmi,type,std,coef,energy,energyRecommended,disease,macro,mode,carb,protein,fat,fixed,grains,beans,tubers,meat,oil,warnings};
+}
+
+function foodMethod(data, mode, protein, veg, regionDish){
+  if(regionDish.includes("白灼")) return "白灼/少量蘸汁";
+  if(regionDish.includes("清蒸") || /鱼/.test(protein)) return "清蒸";
+  if(regionDish.includes("炖") || regionDish.includes("汤")) return "炖煮";
+  if(mode.strategy === "mediterranean") return "橄榄油少量煎烤/凉拌";
+  return "少油快炒/蒸煮";
+}
+const FOOD_NUTRIENTS = {
+  "鸡胸肉":{p:23,c:0,f:2},"去皮鸡腿肉":{p:19,c:0,f:5},"鲈鱼":{p:18,c:0,f:3},"鳕鱼":{p:17,c:0,f:1},"鲫鱼":{p:18,c:0,f:2},"虾仁":{p:18,c:1,f:1},"鱼片":{p:18,c:0,f:2},"瘦牛肉":{p:20,c:0,f:5},"瘦牛里脊":{p:21,c:0,f:4},"瘦猪里脊":{p:20,c:0,f:4},"瘦羊肉":{p:19,c:0,f:6},
+  "北豆腐":{p:8,c:2,f:5},"南豆腐":{p:6,c:2,f:4},"豆干":{p:16,c:4,f:8},"百叶":{p:20,c:4,f:11},"毛豆":{p:13,c:7,f:5},"鹰嘴豆":{p:9,c:27,f:3},"鸡蛋":{p:13,c:1,f:11},"鸡肉丸自制":{p:17,c:3,f:5},
+  "低脂牛奶":{p:3.4,c:5,f:1.5},"零乳糖牛奶":{p:3.4,c:5,f:1.5},"无糖酸奶":{p:4,c:5,f:2},"豆浆":{p:3,c:2,f:1.5},"强化钙豆浆":{p:3,c:2,f:1.5},
+  "燕麦":{p:13,c:67,f:7},"糙米饭":{p:7.5,c:75,f:2.5},"藜麦饭":{p:14,c:64,f:6},"荞麦面":{p:11,c:70,f:2},"玉米":{p:3,c:22,f:1},"红薯":{p:1.5,c:20,f:.2},"杂豆饭":{p:20,c:60,f:1},"全麦面":{p:12,c:65,f:2},"花菜米":{p:2,c:5,f:.3},"魔芋结":{p:.2,c:3,f:.1},"西葫芦面":{p:1,c:3,f:.2},"小份藜麦饭":{p:14,c:64,f:6},"荞麦面小份":{p:11,c:70,f:2},"南瓜":{p:1,c:7,f:.1},"山药":{p:2,c:16,f:.2},
+  "时令蔬菜":{p:2,c:4,f:.3},"时令软烂蔬菜":{p:2,c:4,f:.3},"时令蔬菜泥":{p:1.5,c:4,f:.2},"时令水果":{p:.5,c:12,f:.2},"主食":{p:10,c:65,f:2},"蛋白食材":{p:20,c:2,f:4},"坚果":{p:18,c:20,f:55},"植物油":{p:0,c:0,f:100}
+};
+const FOOD_ALIASES = {"低脂牛奶":"低脂牛奶","无糖酸奶":"无糖酸奶","鸡蛋":"鸡蛋","豆腐":"北豆腐","鱼":"鲈鱼","鱼片":"鱼片","牛肉":"瘦牛肉","鸡肉":"鸡胸肉","猪肉":"瘦猪里脊","羊肉":"瘦羊肉","虾":"虾仁","豆干":"豆干","百叶":"百叶","毛豆":"毛豆","鹰嘴豆":"鹰嘴豆"};
+const MEDICATION_RULES = [
+  {keys:["华法林"],note:"维生素K丰富绿叶菜不需完全避免，但应保持每日摄入量稳定，不应突然大幅增减；任何饮食改变需结合 INR 与医生意见。"},
+  {keys:["辛伐他汀","阿托伐他汀","洛伐他汀"],note:"部分他汀与葡萄柚存在相互作用风险；本方案不安排葡萄柚/葡萄柚汁，具体以药品说明书和医生意见为准。"},
+  {keys:["左甲状腺素","优甲乐"],note:"左甲状腺素通常需空腹服用；钙、铁、复合维生素、膳食纤维补充剂与豆制品等应按医嘱错开，常见建议至少间隔4小时。"},
+  {keys:["阿仑膦酸","双膦酸盐"],note:"双膦酸盐常要求晨起空腹以白水服用，之后一段时间不进食或饮用奶、咖啡、果汁；以处方说明为准。"},
+  {keys:["四环素","多西环素","米诺环素","环丙沙星","左氧氟沙星"],note:"四环素/喹诺酮类与钙、铁、镁、锌及奶制品同服可能影响吸收，应严格按药品说明书或医嘱错开。"},
+  {keys:["ACEI","ARB","氯沙坦","缬沙坦","螺内酯"],note:"ACEI、ARB 或螺内酯合并肾功能异常可能有高钾风险；不自行使用低钠钾盐或额外补钾，蔬果份量按血钾和医嘱调整。"},
+  {keys:["二甲双胍"],note:"长期使用二甲双胍者应关注维生素B12状态，尤其出现贫血、乏力或周围神经症状时；以定期监测为先，不自行大剂量补充。"},
+  {keys:["奥美拉唑","埃索美拉唑","兰索拉唑","泮托拉唑","PPI"],note:"长期PPI使用者可与医生讨论维生素B12、镁、铁等指标监测；饮食优先，补充剂应基于检查结果。"},
+  {keys:["呋塞米","氢氯噻嗪","利尿剂"],note:"利尿剂可能影响钾、镁状态，但是否补充取决于血钾、肾功能及是否联用ACEI/ARB或螺内酯，不能按通用食谱自行补钾。"},
+  {keys:["苯妥英","卡马西平","苯巴比妥","抗癫痫"],note:"长期部分抗癫痫药使用者应与医生讨论维生素D、钙、叶酸和骨健康监测，不自行长期高剂量补充。"},
+  {keys:["奥利司他"],note:"奥利司他会影响脂溶性维生素吸收；如医生建议复合维生素，应与药物错开至少2小时。"},
+  {keys:["异烟肼"],note:"异烟肼使用者的维生素B6补充属于结核治疗配套方案，应由结核诊疗团队决定剂量。"}
+];
+function inputText(data){ return `${data.preference || ""} ${data.allergy || ""} ${data.otherDisease || ""}`.toLowerCase(); }
+function includesAny(text, keys){ return keys.some(key=>text.includes(key.toLowerCase())); }
+function hasLactoseIntolerance(text){
+  const normalized=text.replace(/\s+/g,"");
+  const terms="(?:乳糖不耐受|乳糖不耐|牛奶不耐|奶不耐)";
+  const negated=new RegExp(`(?:无|没有|否认|未见|不存在|未发现|未诊断为|无明显)(?:明确)?${terms}|${terms}(?:史|情况)?(?:为|是)?无`,"g");
+  return new RegExp(terms).test(normalized.replace(negated,""));
+}
+function dietaryFlags(data){
+  const text=inputText(data), allergy=(data.allergy || "").toLowerCase();
+  return {lactose:hasLactoseIntolerance(text), dairy:includesAny(text,["牛奶过敏","乳制品过敏","奶过敏"]) || includesAny(allergy,["牛奶","乳制品","奶粉","酸奶"]), egg:includesAny(text,["鸡蛋过敏","蛋过敏"]) || includesAny(allergy,["鸡蛋","蛋类"]), soy:includesAny(text,["大豆过敏","豆制品过敏","豆腐过敏"]) || includesAny(allergy,["大豆","豆制品","豆腐"]), fish:includesAny(text,["鱼过敏","鱼类过敏"]) || includesAny(allergy,["鱼","鱼类"]), shellfish:includesAny(text,["虾过敏","海鲜过敏","甲壳类过敏"]) || includesAny(allergy,["虾","蟹","贝类","海鲜","甲壳类"]), nut:includesAny(text,["花生过敏","坚果过敏","花生","核桃过敏","杏仁过敏"]) || includesAny(allergy,["花生","坚果","核桃","杏仁"]), beef:includesAny(text,["不吃牛肉","牛肉禁忌"]), pork:includesAny(text,["不吃猪肉","猪肉禁忌"]), lamb:includesAny(text,["不吃羊肉","羊肉禁忌"]), spicy:includesAny(text,["不吃辣","不能吃辣","忌辣"])};
+}
+function proteinAllowed(name, data){
+  const flags=dietaryFlags(data), diseases=data.diseases;
+  if((diseases.includes("高尿酸") || diseases.includes("痛风")) && /鲫鱼|虾仁|鱼片|瘦羊肉/.test(name)) return false;
+  if(diseases.includes("CKD") && /毛豆|鹰嘴豆|豆干|百叶/.test(name)) return false;
+  if(flags.fish && /鲈鱼|鳕鱼|鲫鱼|鱼片/.test(name)) return false;
+  if(flags.shellfish && /虾仁/.test(name)) return false;
+  if(flags.beef && /牛肉/.test(name)) return false;
+  if(flags.pork && /猪/.test(name)) return false;
+  if(flags.lamb && /羊/.test(name)) return false;
+  if(flags.soy && /豆腐|豆干|毛豆|鹰嘴豆|百叶/.test(name)) return false;
+  if(flags.egg && /鸡蛋/.test(name)) return false;
+  if((flags.lactose || flags.dairy) && /牛奶|酸奶/.test(name)) return false;
+  return true;
+}
+function dishAllowed(dish, proteinName, data){
+  const flags=dietaryFlags(data);
+  if(flags.spicy && /辣|麻婆|剁椒|水煮|酸汤/.test(dish)) return false;
+  if(flags.fish && /鱼|海鲜/.test(dish)) return false;
+  if(flags.shellfish && /虾|海鲜/.test(dish)) return false;
+  if(flags.dairy && /奶/.test(dish)) return false;
+  if(flags.soy && /豆腐|豆花|百叶|豆/.test(dish)) return false;
+  if(flags.beef && /牛/.test(dish)) return false;
+  if(flags.pork && /猪|瘦肉/.test(dish)) return false;
+  if(flags.lamb && /羊/.test(dish)) return false;
+  if(flags.egg && /蛋/.test(dish)) return false;
+  if(/鱼|海鲜/.test(dish) && !/鲈鱼|鳕鱼|鲫鱼|鱼片|虾仁/.test(proteinName)) return false;
+  if(/鸡/.test(dish) && !/鸡/.test(proteinName)) return false;
+  if(/牛/.test(dish) && !/牛/.test(proteinName)) return false;
+  if(/羊/.test(dish) && !/羊/.test(proteinName)) return false;
+  if(/豆腐|豆花|百叶/.test(dish) && !/豆腐|豆干|百叶|毛豆|鹰嘴豆/.test(proteinName)) return false;
+  return true;
+}
+function textureProfile(data){
+  if(data.dietTexture === "流质") return {label:"流质",method:"搅打/过滤流质",staples:["燕麦","南瓜","山药"],protein:["北豆腐","鸡蛋","无糖酸奶"],veg:"时令蔬菜泥",note:"流质饮食仅适用于已获医疗或营养专业人员明确建议的短期阶段；本工具不替代吞咽与营养风险评估。"};
+  if(data.dietTexture === "半流食") return {label:"半流食",method:"煮软/蒸制",staples:["燕麦","南瓜","山药","红薯"],protein:["北豆腐","南豆腐","鸡蛋","鳕鱼","鸡胸肉"],veg:"时令软烂蔬菜",note:"选择粥、烂面、蛋羹、豆腐、鱼泥等软烂食物；根据胃肠耐受少量多餐。"};
+  if(data.dietTexture === "软食") return {label:"软食",method:"蒸煮炖软",staples:["燕麦","糙米饭","玉米","红薯","南瓜","山药"],protein:["鸡胸肉","鳕鱼","鲈鱼","北豆腐","南豆腐","鸡蛋"],veg:"时令软烂蔬菜",note:"食物切小、炖软，避免坚硬、油炸、粗糙和刺激性食物。"};
+  return {label:"普食",method:"蒸煮炖/少油快炒",staples:null,protein:null,veg:"时令蔬菜",note:"按可正常咀嚼吞咽的普食结构安排。"};
+}
+function ingredient(name, grams, fallback){
+  const key=FOOD_ALIASES[name] || name;
+  const per100=FOOD_NUTRIENTS[key] || FOOD_NUTRIENTS[fallback] || FOOD_NUTRIENTS["时令蔬菜"];
+  return {name,grams,category:fallback,p:round1(per100.p*grams/100),c:round1(per100.c*grams/100),f:round1(per100.f*grams/100)};
+}
+function foodPer100(name, fallback){
+  const key=FOOD_ALIASES[name] || name;
+  return FOOD_NUTRIENTS[key] || FOOD_NUTRIENTS[fallback] || FOOD_NUTRIENTS["时令蔬菜"];
+}
+function foodAllowed(name, data){
+  const allergy=(data.allergy || "").toLowerCase();
+  if(/苹果|梨|桃|西瓜|葡萄|猕猴桃|橙子|草莓|枇杷|李子|蓝莓|柿子/.test(name) && allergy.includes(name.toLowerCase())) return false;
+  return proteinAllowed(name,data);
+}
+function sumNutrition(items){
+  const total=items.reduce((sum,item)=>({p:sum.p+item.p,c:sum.c+item.c,f:sum.f+item.f}),{p:0,c:0,f:0});
+  total.p=round1(total.p); total.c=round1(total.c); total.f=round1(total.f); total.energy=round0(total.p*4+total.c*4+total.f*9);
+  return total;
+}
+function foodSubstitutionNotes(data){
+  const flags=dietaryFlags(data), notes=[];
+  if(flags.lactose) notes.push("乳糖不耐：以无糖酸奶或零乳糖牛奶替代普通牛奶；如仍有症状，选强化钙豆制品并结合耐受。" );
+  if(flags.dairy) notes.push("乳制品过敏：不使用牛奶和酸奶，以强化钙豆制品等替代；过敏史应以医疗诊断为准。" );
+  if(flags.fish || flags.shellfish || flags.egg || flags.soy || flags.nut) notes.push("已按填写的食物过敏信息排除对应食材；配制、外卖和食堂场景仍需防范交叉接触。" );
+  if(flags.beef || flags.pork || flags.lamb) notes.push("已按个人禁忌排除相应畜肉，并用鱼禽蛋豆等允许食物轮换。" );
+  return notes;
+}
+function medicationNotes(data){
+  const labs=(data.labs || "").toLowerCase();
+  return MEDICATION_RULES.filter(rule=>includesAny(labs,rule.keys)).map(rule=>rule.note);
+}
+function weeklyMenu(data, plan){
+  const meals = splitMeals(data.meals, data.diseases);
+  const count = 7 * meals.length;
+  const region = profileForRegion(data.region);
+  const season = SEASONAL_FOODS[data.season] || SEASONAL_FOODS["夏季"];
+  const mode = plan.mode;
+  const texture=textureProfile(data);
+  const flags=dietaryFlags(data);
+  const proteinBase=texture.protein || (mode.strategy === "highProtein" || mode.strategy === "lowCarb" ? FOOD_POOLS.highProtein : FOOD_POOLS.proteins);
+  const allowedProteins=proteinBase.filter(name=>proteinAllowed(name,data));
+  const proteinPool=choosePool(allowedProteins.length ? allowedProteins : ["蛋白食材"],count);
+  const allowedVeg=season.veg.filter(name=>foodAllowed(name,data));
+  const allowedFruit=season.fruit.filter(name=>foodAllowed(name,data));
+  const vegPool=choosePool(allowedVeg.length ? allowedVeg : ["时令蔬菜"],count);
+  const fruitPool=choosePool(allowedFruit.length ? allowedFruit : ["时令水果"],count);
+  const standardStaples=texture.staples || (mode.strategy === "lowGI" ? FOOD_POOLS.lowGIStaples : mode.strategy === "lowCarb" ? FOOD_POOLS.lowCarbStaples : [...region.staples,"糙米饭","燕麦","玉米","红薯","杂豆饭","全麦面"]);
+  const staplePool=choosePool(standardStaples.filter(name=>foodAllowed(name,data)),count);
+  const milkName=flags.dairy ? (proteinAllowed("强化钙豆浆",data) ? "强化钙豆浆" : "") : flags.lactose ? "零乳糖牛奶" : "无糖酸奶";
+  const rows=[];
+  let index=0;
+  for(let day=0;day<7;day++){
+    meals.forEach(([meal,percent])=>{
+      const fraction=percent/100, isBreakfast=/早餐/.test(meal), isSnack=/加餐|睡前/.test(meal), includeExtras=isBreakfast||isSnack, proteinName=proteinPool[index], veg=texture.veg === "时令蔬菜" ? vegPool[index] : texture.veg, staple=staplePool[index];
+      const target={c:plan.carb*fraction,p:plan.protein*fraction,f:plan.fat*fraction};
+      const vegWeight=round5(Math.max(isSnack ? 40 : 80,plan.fixed.veg*fraction));
+      const fruitName=fruitPool[index], fruitWeight=includeExtras ? round5(Math.max(isSnack ? 80 : 50,plan.fixed.fruit*fraction)) : 0;
+      const drinkWeight=includeExtras&&milkName ? round5(Math.max(60,plan.fixed.milk*fraction)) : 0;
+      const baseItems=[];
+      if(vegWeight) baseItems.push(ingredient(veg,vegWeight,"时令蔬菜"));
+      if(fruitWeight) baseItems.push(ingredient(fruitName,fruitWeight,"时令水果"));
+      if(drinkWeight) baseItems.push(ingredient(milkName,drinkWeight,"豆浆"));
+      if(!flags.nut && isSnack) baseItems.push(ingredient("坚果",round1(Math.max(5,plan.fixed.nuts*fraction)),"坚果"));
+      const staplePer100=foodPer100(staple,"主食"), proteinPer100=foodPer100(proteinName,"蛋白食材");
+      const beforeStaple=sumNutrition(baseItems);
+      let grain=round5(Math.max(isSnack ? 10 : 20,(target.c-beforeStaple.c)*100/Math.max(staplePer100.c,1)));
+      let grainItem=ingredient(staple,grain,"主食");
+      const afterStaple=sumNutrition([...baseItems,grainItem]);
+      const proteinLimit=data.diseases.includes("CKD") ? 45 : (data.diseases.includes("高尿酸") || data.diseases.includes("痛风")) ? 55 : 260;
+      const proteinWeight=proteinName === "蛋白食材" ? 0 : round5(Math.max(isSnack ? 15 : 25,Math.min(proteinLimit,(target.p-afterStaple.p)*100/Math.max(proteinPer100.p,1))));
+      const proteinItem=proteinWeight ? ingredient(proteinName,proteinWeight,"蛋白食材") : null;
+      const afterProtein=sumNutrition(proteinItem ? [...baseItems,grainItem,proteinItem] : [...baseItems,grainItem]);
+      grain=round5(Math.max(isSnack ? 10 : 20,(target.c-afterProtein.c+grainItem.c)*100/Math.max(staplePer100.c,1)));
+      grainItem=ingredient(staple,grain,"主食");
+      const items=proteinItem ? [...baseItems,grainItem,proteinItem] : [...baseItems,grainItem];
+      const beforeOil=sumNutrition(items);
+      const oil=round1(Math.max(isSnack ? 0 : 1,Math.min(18,target.f-beforeOil.f)));
+      if(oil) items.push(ingredient("植物油",oil,"植物油"));
+      const proteinText=proteinItem ? `${proteinName}${proteinWeight}g` : drinkWeight ? `${milkName}${drinkWeight}ml` : "蛋白补充需人工确认";
+      const menu=`${staple}${grain}g + ${proteinText}${vegWeight ? ` + ${veg}${vegWeight}g` : ""}${fruitWeight ? ` + ${fruitName}${fruitWeight}g` : ""}${drinkWeight ? ` + ${milkName}${drinkWeight}ml` : ""}`;
+      const weights=`主食${grain}g生重（熟重约${round5(grain*2.3)}g）；${proteinItem ? `${proteinName}${proteinWeight}g生重；` : ""}${vegWeight ? `${veg}${vegWeight}g；` : ""}${fruitWeight ? `${fruitName}${fruitWeight}g可食部；` : ""}${drinkWeight ? `${milkName}${drinkWeight}ml；` : ""}烹调油约${oil}g。`;
+      const method=isSnack ? "即食/冷藏" : data.dietTexture === "普食" ? foodMethod(data,mode,proteinName,veg,"") : texture.method;
+      const nutrients=sumNutrition(items);
+      const structure={staple:items.some(item=>item.category==="主食"),protein:items.some(item=>item.category==="蛋白食材"),produce:items.some(item=>item.category==="时令蔬菜"||item.category==="时令水果")};
+      const structureStatus=Object.values(structure).every(Boolean)?"通过":"未通过：需人工补配";
+      const safetyNote=!allowedProteins.length ? "当前过敏/忌口与饮食质地限制后无可自动匹配的蛋白食材，请由临床营养师人工确认；" : "";
+      rows.push({day:`第${day+1}天`,dayIndex:day,meal,menu,weights,method,energy:nutrients.energy,nutrients,items,structure,structureStatus,servings:{veg:vegWeight,oil,isSnack,fruit:fruitWeight},note:`${safetyNote}${diseaseMenuNote(data)}；${texture.note}`});
+      index++;
+    });
+  }
+  return {style:region.style,rows,seasonText:seasonalFoodText(data.season),texture};
+}
+function nutritionSummary(weekPlan){
+  const days=Array.from({length:7},()=>({p:0,c:0,f:0,energy:0,veg:0,oil:0,fruit:0}));
+  weekPlan.rows.forEach(row=>{ const target=days[row.dayIndex]; ["p","c","f","energy"].forEach(key=>target[key]+=row.nutrients[key]); target.veg+=row.servings.veg; target.oil+=row.servings.oil; target.fruit+=row.servings.fruit; });
+  days.forEach(day=>{ ["p","c","f","veg","oil","fruit"].forEach(key=>day[key]=round1(day[key])); day.energy=round0(day.energy); });
+  const average=days.reduce((sum,day)=>({p:sum.p+day.p,c:sum.c+day.c,f:sum.f+day.f,energy:sum.energy+day.energy,veg:sum.veg+day.veg,oil:sum.oil+day.oil,fruit:sum.fruit+day.fruit}),{p:0,c:0,f:0,energy:0,veg:0,oil:0,fruit:0});
+  ["p","c","f","energy","veg","oil","fruit"].forEach(key=>average[key]=round1(average[key]/7));
+  average.energy=round0(average.energy);
+  return {days,average};
+}
+function nutritionStatus(actual,target,tolerance=.08){ return Math.abs(actual-target)/Math.max(target,1)<=tolerance ? "达标" : actual<target ? "偏低，需调整" : "偏高，需调整"; }
+function nutrientCompareRows(data, plan, summary){
+  const macro=plan.macro, avg=summary.average;
+  const cRatio=round1(avg.c*4/Math.max(avg.energy,1)*100), pRatio=round1(avg.p*4/Math.max(avg.energy,1)*100), fRatio=round1(avg.f*9/Math.max(avg.energy,1)*100);
+  return [
+    ["能量",`${plan.energy} kcal`,`${avg.energy} kcal`,"配餐目标±8%",nutritionStatus(avg.energy,plan.energy)],
+    ["碳水化合物",`${plan.carb} g / ${macro.c}%`,`${avg.c} g / ${cRatio}%`,"目标供能比±3%",nutritionStatus(cRatio,macro.c,.06)],
+    ["蛋白质",`${plan.protein} g / ${macro.p}%`,`${avg.p} g / ${pRatio}%`,"目标供能比±3%；含鱼禽蛋奶豆",nutritionStatus(pRatio,macro.p,.06)],
+    ["脂肪",`${plan.fat} g / ${macro.f}%`,`${avg.f} g / ${fRatio}%`,"目标供能比±3%",nutritionStatus(fRatio,macro.f,.06)],
+    ["蔬菜",`${plan.fixed.veg} g`,`${round0(avg.veg)} g`,"优先当季、多样","执行参考"],
+    ["水果",`${plan.fixed.fruit} g`,`${round0(avg.fruit)} g`,"完整水果、分次吃","执行参考"],
+    ["烹调油",`约${plan.oil} g`,`${round0(avg.oil)} g`,"优先植物油，避免油炸","执行参考"]
+  ];
+}
+
+function modeCard(data, plan){
+  const mode=plan.mode;
+  return `<div class="card intervention-panel"><h3>营养干预模式与动态配餐参数</h3>
+    <p><b>${mode.label}</b>｜${mode.group}</p>
+    <p class="muted">${mode.intro}</p>
+    <div class="report-grid"><div class="note"><b>适合：</b>${mode.fit}<br><b>推荐范围：</b>${mode.range}</div><div class="note risk"><b>慎用/注意：</b>${mode.caution}<br><b>循证依据：</b>${mode.source}</div></div>
+    <div class="plan-controls" id="planControls">
+      <div><label class="label" for="reportDietMode">干预模式</label><select id="reportDietMode">${Object.entries(DIET_MODES).map(([id,item])=>`<option value="${id}" ${id===data.dietMode?"selected":""}>${item.group}｜${item.label}</option>`).join("")}</select></div>
+      <div><label class="label" for="reportSeason">季节</label><select id="reportSeason">${Object.keys(SEASONAL_FOODS).map(x=>`<option ${x===data.season?"selected":""}>${x}</option>`).join("")}</select></div>
+      <div><label class="label" for="reportMeals">每日餐次</label><select id="reportMeals">${[[1,"一餐"],[2,"两餐"],[3,"三餐"],[4,"三餐一加餐"],[5,"三餐两加餐"],[6,"六餐（含加餐）"]].map(([value,label])=>`<option value="${value}" ${Number(data.meals)===value?"selected":""}>${label}</option>`).join("")}</select></div>
+      <div><label class="label" for="reportEnergy">采用能量（kcal）</label><input id="reportEnergy" type="number" min="800" max="6000" step="50" value="${plan.energy}"><small class="muted">系统估算：${plan.energyRecommended} kcal</small></div>
+      <div><label class="label" for="reportMacroCarb">碳水%</label><input id="reportMacroCarb" type="number" min="15" max="70" value="${plan.macro.c}"></div>
+      <div><label class="label" for="reportMacroProtein">蛋白%</label><input id="reportMacroProtein" type="number" min="10" max="35" value="${plan.macro.p}"></div>
+      <div><label class="label" for="reportMacroFat">脂肪%</label><input id="reportMacroFat" type="number" min="15" max="45" value="${plan.macro.f}"></div>
+      <button class="btn" type="button" id="rebuildPlanBtn">按新参数重新生成</button>
+    </div>
+    <div id="reportMacroError" class="macro-error">请确认供能比合计为 100%，且能量在 800–6000 kcal 范围内。</div>
+    <p class="muted" style="margin:10px 0 0">修改模式、季节、餐次、能量或供能比后，系统会重新生成 7 日食谱。每餐核验主食、蛋白质与蔬菜/水果；受过敏和禁忌限制而无安全蛋白选项时会标记人工补配。</p>
+  </div>`;
+}
+
+function bindReportControls(data){
+  const updateByMode=()=>{
+    const macro=modeFor(v("reportDietMode")).macro;
+    $("reportMacroCarb").value=macro.c; $("reportMacroProtein").value=macro.p; $("reportMacroFat").value=macro.f;
+    $("reportMacroError").style.display="none";
+  };
+  $("reportDietMode").addEventListener("change",updateByMode);
+  $("rebuildPlanBtn").addEventListener("click",()=>{
+    const macro={c:Number($("reportMacroCarb").value),p:Number($("reportMacroProtein").value),f:Number($("reportMacroFat").value)};
+    const energy=Number($("reportEnergy").value);
+    if(!validMacro(macro) || !Number.isFinite(energy) || energy<800 || energy>6000){ $("reportMacroError").style.display="block"; return; }
+    const nextData={...data,dietMode:v("reportDietMode"),season:v("reportSeason"),meals:v("reportMeals"),energyOverride:energy,macro};
+    const nextPlan=calculate(nextData);
+    render(nextData,nextPlan);
+    submitToFeishu(nextData,nextPlan);
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+}
+
+const EXERCISE_EVIDENCE = {
+  who:"WHO《身体活动和久坐行为指南》（2020）：成年人每周至少150–300分钟中等强度有氧或75–150分钟高强度有氧，并每周至少2天肌肉力量活动；应减少久坐。",
+  acsm:"ACSM FITT 原则：根据健康风险、训练基础、目标和功能状态，逐步安排类型、频率、时间与强度。",
+  china:"中国居民身体活动相关指南：鼓励日常身体活动、减少久坐，并将有氧、力量、柔韧与平衡训练纳入长期生活方式。"
+};
+
+function checkedSportTypes(){
+  return [...document.querySelectorAll('input[name="sportType"]:checked')].map(x=>x.value);
+}
+function movementLevel(score){
+  if(score === null || !Number.isFinite(score)) return "未评估";
+  if(score >= 2.5) return "良好";
+  if(score >= 1.8) return "基础可用";
+  if(score >= 1.1) return "需重点改善";
+  return "暂不宜自行进阶";
+}
+function mean(values){ const valid=values.filter(Number.isFinite); return valid.length ? round1(valid.reduce((sum,value)=>sum+value,0)/valid.length) : null; }
+function assessMovement(data){
+  const f=data.fms;
+  const scores={
+    coordination:mean([f.balance,f.symmetry]),
+    mobility:mean([f.shoulder,f.thoracic,f.hip,f.ankle]),
+    lower:mean([f.hip,f.ankle,f.squat,f.lunge]),
+    core:f.core,
+    flexibility:mean([f.hamstring,f.calf])
+  };
+  const overall=mean(Object.values(scores));
+  const flags=[];
+  if([f.balance,f.symmetry,f.squat,f.lunge,f.core].includes(0)) flags.push("自评中存在疼痛、眩晕或无法完成的基础动作，应先进行医学/康复评估，不以本报告替代检查。");
+  if(scores.coordination!==null && scores.coordination<1.8) flags.push("协调与平衡是当前优先短板，应从扶稳单脚站立、重心转移和低风险平衡练习开始。");
+  if(scores.mobility!==null && scores.mobility<1.8) flags.push("灵活性不足时，先改善胸椎、髋和踝活动度，再提高深蹲、跑跳或负重训练量。");
+  if(scores.lower!==null && scores.lower<1.8) flags.push("下肢功能不足时，优先椅子深蹲、台阶练习与髋稳定，不以跑跳和大负重为起点。");
+  if(scores.core!==null && scores.core<1.8) flags.push("核心稳定不足时，优先呼吸控制、死虫式、鸟狗式等低负荷练习。 ");
+  const riskHigh=String(data.exerciseContra||"").includes("未评估") || String(data.cardioRisk||"").includes("已确诊") || String(data.chronicPain||"").includes("当前") || String(data.jointInjury||"").includes("近期") || Object.values(f).includes(0);
+  const riskModerate=!riskHigh && (String(data.cardioRisk||"").includes("状态稳定") || String(data.chronicPain||"").includes("反复") || String(data.jointInjury||"").includes("仍有" ) || data.diseases.some(d=>["糖尿病","高血压","冠心病","COPD","CKD"].includes(d)));
+  const riskInfo=[data.exerciseContra,data.cardioRisk,data.chronicPain,data.jointInjury].some(Boolean);
+  const risk=riskHigh ? "高风险" : riskModerate ? "中等风险" : riskInfo ? "低风险" : "未评估";
+  if(risk==="未评估") flags.push("未填写运动风险信息，当前运动风险未评估；请先补充基础运动信息，再参考个性化运动建议。");
+  return {scores,overall,overallLevel:movementLevel(overall),risk,flags};
+}
+
+function exercisePrescription(data,plan,assessment){
+  const beginner=assessment.overall===null || !data.exerciseHabit || data.exerciseHabit==="无规律运动" || data.exerciseHabit==="偶尔活动" || assessment.overall<1.8;
+  const weightGoal=data.goal==="控制体重" || data.diseases.includes("肥胖/超重") || plan.type==="超重" || plan.type==="肥胖";
+  const lowImpact=(data.chronicPain && data.chronicPain!=="无") || (data.jointInjury && data.jointInjury!=="无") || (assessment.scores.lower!==null && assessment.scores.lower<1.8);
+  const goal=weightGoal ? "减脂并维持瘦体重" : assessment.scores.core!==null && assessment.scores.core<1.8 ? "提高核心稳定与日常活动能力" : "提高心肺与综合体能";
+  let aerobic,resistance,functional,flexibility,notes=[];
+  if(assessment.risk==="高风险"){
+    aerobic={type:"医疗评估后低冲击步行或固定车",frequency:"每周3–5次",time:"每次10–20分钟，耐受后每周增加约5分钟",intensity:"低强度；RPE 2–3，可完整交谈",goal:"恢复安全活动能力"};
+    resistance={type:"康复专业人员评估后的坐姿/弹力带基础训练",frequency:"每周2次（非连续日）",time:"每次10–15分钟",intensity:"低负荷、无痛范围",goal:"维持基础肌力"};
+    functional={type:"扶稳平衡、呼吸控制与关节活动练习",frequency:"每周5–7次",time:"每次5–10分钟",intensity:"低强度、无痛",goal:"改善安全性与稳定性"};
+    flexibility={type:"温和拉伸",frequency:"每周5–7次",time:"每个动作20–30秒，2组",intensity:"轻微牵拉感，不疼痛",goal:"改善活动度"};
+    notes.push("出现胸痛、晕厥、异常气促、持续心悸或疼痛加重时立即停止，并及时就医。");
+    notes.push("在医生明确可运动前，不安排跑跳、高强度间歇或大重量抗阻训练。");
+  }else if(beginner){
+    aerobic={type:lowImpact?"快走、固定车或游泳/水中步行":"快走、骑行或椭圆机",frequency:"每周4–5次",time:"每次20–30分钟",intensity:"低到中等强度；RPE 3–4，能说短句",goal:weightGoal?"建立减脂活动基础":"提高心肺耐力"};
+    resistance={type:"自重椅子深蹲、靠墙俯卧撑、弹力带划船",frequency:"每周2次（间隔48小时）",time:"每次20分钟",intensity:"每动作8–12次×1–2组，保留2–3次余力",goal:"提升基础肌力与瘦体重保护"};
+    functional={type:assessment.scores.coordination!==null && assessment.scores.coordination<1.8?"扶稳单脚站立、重心转移、台阶踏步":"死虫式、鸟狗式、臀桥",frequency:"每周3–5次",time:"每次10–15分钟",intensity:"动作稳定、无痛、不过度憋气",goal:assessment.scores.coordination!==null && assessment.scores.coordination<1.8?"改善协调和平衡":"改善核心稳定"};
+    flexibility={type:"髋屈肌、腘绳肌、小腿、胸椎活动练习",frequency:"每周5–7次",time:"每个动作20–30秒×2组",intensity:"轻微牵拉感",goal:"改善灵活性"};
+  }else{
+    aerobic={type:lowImpact?"快走、骑行、椭圆机或游泳":"快走、慢跑间歇、骑行或游泳",frequency:weightGoal?"每周5–6次":"每周3–5次",time:weightGoal?"每次30–45分钟":"每次30–40分钟",intensity:"中等强度；RPE 4–6，约50%–70% HRmax",goal:weightGoal?"减脂与心肺提升":"提高心肺耐力"};
+    resistance={type:"深蹲/髋铰链、推、拉、提踵和抗旋转训练",frequency:"每周2–3次（非连续日）",time:"每次30–40分钟",intensity:"每动作8–12次×2–3组，RPE 5–7",goal:"增肌保肌并改善代谢"};
+    functional={type:assessment.scores.lower!==null && assessment.scores.lower<1.8?"台阶、分腿蹲辅助与髋稳定训练":"平板支撑、鸟狗式、单腿平衡",frequency:"每周3次",time:"每次15分钟",intensity:"中低强度，动作质量优先",goal:assessment.scores.lower!==null && assessment.scores.lower<1.8?"改善下肢功能":"提高核心与协调能力"};
+    flexibility={type:"动态热身+训练后静态拉伸",frequency:"每周5–7次",time:"每个动作20–30秒×2–3组",intensity:"轻度牵拉，不追求疼痛范围",goal:"维持关节活动度"};
+  }
+  if(assessment.risk==="中等风险") notes.push("已有慢病、反复疼痛或既往损伤时，先从低到中等强度开始；血压、血糖或症状异常时暂停并咨询医生。");
+  if(String(data.sittingTime||"").includes("6-") || String(data.sittingTime||"").includes("超过")) notes.push("久坐日优先增加步行和每30–60分钟一次的短暂活动，不用周末一次性高强度补偿。");
+  return {goal,aerobic,resistance,functional,flexibility,notes};
+}
+
+function weeklyExercisePlan(rx,assessment){
+  const high=assessment.risk==="高风险";
+  const a=rx.aerobic, r=rx.resistance, f=rx.functional, l=rx.flexibility;
+  if(high) return [
+    ["周一",`${a.type} ${a.time}`,a.intensity,"全程无痛、可交谈；不适即停止"],
+    ["周二",`${f.type} ${f.time}`,f.intensity,"优先稳定和呼吸，不屏气"],
+    ["周三",`${a.type} ${a.time}`,a.intensity,"记录是否有胸闷、异常气促或疼痛"],
+    ["周四",`${l.type} ${l.time}`,l.intensity,"不进行弹震式拉伸"],
+    ["周五",`${r.type} ${r.time}`,r.intensity,"仅在医护/康复建议范围内进行"],
+    ["周六",`${a.type} ${a.time}`,a.intensity,"以轻松、安全完成为目标"],
+    ["周日","主动恢复：轻松散步+呼吸放松10分钟","低强度","复盘症状与恢复情况，必要时调整"]
+  ];
+  return [
+    ["周一",`${a.type} ${a.time} + ${l.type} 10分钟`,a.intensity,"先热身5分钟，结束后逐步放松"],
+    ["周二",`${r.type} ${r.time} + ${f.type} 10分钟`,r.intensity,"动作质量优先；不要憋气"],
+    ["周三",`${a.type} ${a.time}`,a.intensity,"可拆分为2次完成"],
+    ["周四",`${f.type} ${f.time} + ${l.type} 10分钟`,f.intensity,"平衡训练需靠近稳定支撑物"],
+    ["周五",`${r.type} ${r.time} + 轻松步行15分钟`,r.intensity,"相同肌群与上次间隔至少48小时"],
+    ["周六",`${a.type} ${a.time}`,a.intensity,"可选择自己更容易坚持的项目"],
+    ["周日","主动恢复：轻松步行20分钟 + 拉伸10分钟","低强度；RPE 2–3","不追求训练量，关注睡眠和恢复"]
+  ];
+}
+
+function lifestyleWeek(data,plan,assessment){
+  const stepTarget=assessment.risk==="高风险"?"以当前步数为基础，每周增加约500步/日，先获得医生许可":"起步目标6000–8000步/日；减脂且无不适者逐步向8000–10000步/日靠近";
+  const water=data.diseases.includes("CKD")?"饮水量按肾内科医嘱执行，不以通用目标替代。":`日饮水目标约${Math.min(2500,Math.max(1500,round0(data.weight*30)))} ml，分次饮用。`;
+  const breakText=String(data.sittingTime||"").includes("少于4")?"每60分钟起身活动2–3分钟。":"每30–60分钟起身活动2–3分钟，接电话或倒水时增加步行。";
+  return [
+    ["周一","睡眠",`固定起床时间；睡前60分钟减少屏幕和酒精。`,"目标7–9小时"],
+    ["周二","久坐中断",breakText,stepTarget],
+    ["周三","饮水与餐后活动",`${water} 餐后步行10–15分钟。`,`避免用含糖饮料替代饮水`],
+    ["周四","压力管理","5分钟腹式呼吸：吸气4秒、呼气6秒，循环进行。","焦虑/失眠持续时寻求专业支持"],
+    ["周五","恢复","训练后安排轻松步行或拉伸，不连续安排高负荷。","记录疼痛、疲劳和睡眠"],
+    ["周六","户外日常活动","选择可持续的户外步行、家务或社交活动。",stepTarget],
+    ["周日","周复盘","记录运动完成度、腰围/体重趋势、疼痛与精力。","下周总量仅在恢复良好时小幅增加"]
+  ];
+}
+
+function movementReport(data,plan){
+  const assessment=assessMovement(data);
+  const rx=exercisePrescription(data,plan,assessment);
+  const week=weeklyExercisePlan(rx,assessment);
+  const life=lifestyleWeek(data,plan,assessment);
+  plan.movement={assessment,rx,week,life};
+  const scoreRows=[["协调能力",assessment.scores.coordination],["灵活性",assessment.scores.mobility],["核心稳定",assessment.scores.core],["下肢功能",assessment.scores.lower],["柔韧性",assessment.scores.flexibility],["综合能力",assessment.overall]];
+  const fitt=[rx.aerobic,rx.resistance,rx.functional,rx.flexibility];
+  const scoreText=score=>score===null?"未评估":`${score}/3`;
+  return `<div class="card movement-panel">
+    <h3>九、运动能力评估与个性化运动处方</h3>
+    <p><b>运动风险分层：</b><span class="tag ${assessment.risk==="高风险"?"warn":"blue"}">${assessment.risk}</span>　<b>综合运动能力：</b>${assessment.overall===null?"未评估":`${assessment.overallLevel}（${assessment.overall}/3）`}</p>
+    <div class="score-grid">${scoreRows.map(([name,score])=>`<div class="score-card"><span>${name}</span><b>${scoreText(score)}</b><small>${movementLevel(score)}</small></div>`).join("")}</div>
+    <p class="muted" style="margin:10px 0 0">本评分为简易功能自评，不等同于标准 FMS 总分，也不用于诊断、损伤预测或替代线下动作筛查。</p>
+  </div>
+  <div class="card">
+    <h3>十、FITT 个性化运动处方</h3>
+    <p><b>主要目标：</b>${rx.goal}</p>
+    <div class="table-scroll"><table><thead><tr><th>类型 Type</th><th>频率 Frequency</th><th>时间 Time</th><th>强度 Intensity</th><th>目标 Goal</th></tr></thead><tbody>${fitt.map(item=>`<tr><td>${item.type}</td><td>${item.frequency}</td><td>${item.time}</td><td>${item.intensity}</td><td>${item.goal}</td></tr>`).join("")}</tbody></table></div>
+    <div class="note" style="margin-top:12px"><b>训练进阶：</b>每周总运动量或单次时长仅在无疼痛、睡眠与疲劳恢复良好时小幅增加；不以“累到力竭”作为有效训练标准。</div>
+  </div>
+  <div class="card">
+    <h3>十一、7 天运动干预计划</h3>
+    <div class="table-scroll"><table><thead><tr><th>日期</th><th>运动项目与时间</th><th>强度</th><th>注意事项</th></tr></thead><tbody>${week.map(row=>`<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join("")}</tbody></table></div>
+  </div>
+  <div class="card">
+    <h3>十二、7 天生活方式干预计划</h3>
+    <div class="table-scroll"><table><thead><tr><th>日期</th><th>重点</th><th>执行任务</th><th>提醒</th></tr></thead><tbody>${life.map(row=>`<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join("")}</tbody></table></div>
+  </div>
+  <div class="card">
+    <h3>十三、运动注意事项与依据</h3>
+    <ul class="list">${assessment.flags.map(x=>`<li>${x}</li>`).join("")}${rx.notes.map(x=>`<li>${x}</li>`).join("")}<li><a href="https://www.who.int/publications/i/item/9789240015128/" target="_blank" rel="noopener">${EXERCISE_EVIDENCE.who}</a></li><li><a href="https://acsm.org/education-resources/books/guidelines-exercise-testing-prescription/" target="_blank" rel="noopener">${EXERCISE_EVIDENCE.acsm}</a></li><li>${EXERCISE_EVIDENCE.china}</li><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11860429/" target="_blank" rel="noopener">FMS/Y-Balance 相关综述（2025）</a>：简化筛查的损伤预测准确性并不稳定，故本工具仅将其用于发现训练短板与风险提示。</li></ul>
+    <p class="muted">若存在胸痛、晕厥、异常气促、静息血压显著升高、急性关节肿痛或血糖相关不适，应停止运动并就医；糖尿病、心肺疾病、慢性肾病（CKD）、孕期及近期损伤人群需与医生或康复专业人员共同制定计划。</p>
+  </div>`;
+}
+
+function render(data, plan){
+  latestPlanData=data;
+  latestPlan=plan;
+  legacyRender(data,plan);
+  $("report").insertAdjacentHTML("afterbegin",modeCard(data,plan));
+  $("reportSub").textContent=`${data.sex}，${data.age}岁，${data.height}cm，${data.weight}kg；目标：${data.goal}；${plan.mode.label}｜${data.season}`;
+  const seasonalLine=[...$("report").querySelectorAll("li")].find(item=>item.textContent.includes("季节食材"));
+  if(seasonalLine) seasonalLine.textContent=`季节食材：${seasonalFoodText(data.season)} 优先选择当地当季食材，并根据食材供应灵活替换。`;
+  const riskCard=[...$("report").querySelectorAll(".risk")].find(item=>item.textContent.includes("本工具用于营养教育"));
+  if(plan.warnings.length && riskCard) riskCard.innerHTML+=`<br><br><b>当前参数提示：</b>${plan.warnings.map(x=>`<br>• ${x}`).join("")}`;
+  $("report").insertAdjacentHTML("beforeend",movementReport(data,plan));
+  bindReportControls(data);
+}
+
+function savePlanJson(){
+  if(!latestPlanData || !latestPlan) return;
+  const payload={version:"一腾营养家营养师个性化配餐 V4",savedAt:new Date().toISOString(),data:latestPlanData,plan:latestPlan,reportText:$("report").innerText};
+  downloadBlob(JSON.stringify(payload,null,2),`${latestPlanData.name}-个性化配餐方案.json`,"application/json;charset=utf-8");
+}
+function downloadBlob(content,filename,type){
+  const blob=new Blob([content],{type});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob); link.download=filename; document.body.appendChild(link); link.click();
+  setTimeout(()=>URL.revokeObjectURL(link.href),1000); link.remove();
+}
+
+const DRAFT_KEY="yitengNutritionPlannerDraftV2";
+const formControls=()=>[...document.querySelectorAll("#mainForm input, #mainForm select, #mainForm textarea")];
+let draftDirty=false;
+function collectPlannerImportData(){
+  const data={};
+  ["name","sex","age","height","weight","region","goal","labs","otherDisease","dietTexture","allergy","job","activity","exercise","sleep","smokeDrink","meals","breakfastPlace","lunchPlace","dinnerPlace","preference","season","bodyFat","exerciseHabit","exerciseDuration","sittingTime","exerciseContra","chronicPain","jointInjury","cardioRisk","fmsBalance","fmsSymmetry","fmsShoulder","fmsThoracic","fmsHip","fmsAnkle","fmsSquat","fmsLunge","fmsCore","fmsHamstring","fmsCalf"].forEach(id=>{
+    const control=$(id);
+    if(control && String(control.value ?? "").trim()) data[id]=control.value;
+  });
+  data.sportTypes=checkedSportTypes();
+  data.diseases=checkedDiseases();
+  return data;
+}
+function saveDraft(){
+  try{
+    const snapshot=formControls().map(control=>({id:control.id,name:control.name,type:control.type,value:control.value,checked:control.checked}));
+    localStorage.setItem(DRAFT_KEY,JSON.stringify({savedAt:new Date().toISOString(),snapshot}));
+    draftDirty=false;
+    $("saveStatus").textContent=`已保存到当前浏览器：${new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}。`;
+  }catch{
+    draftDirty=true;
+    $("saveStatus").textContent="自动保存失败；请检查浏览器存储空间，并使用“保存方案 JSON”留存。";
+  }
+}
+
+const importRules = {
+  name:/姓名|客户(?:姓名|编号)|客户名/i,
+  sex:/性别/i,
+  age:/年龄/i,
+  height:/身高/i,
+  weight:/体重(?!变化)/i,
+  region:/地区|地域|居住地|饮食地区/i,
+  disease:/现病史|疾病|诊断|健康问题|主要问题/i,
+  goal:/目标|诉求|重点管理/i,
+  labs:/实验室|化验|指标|用药|药物/i,
+  otherDisease:/其他疾病|特殊情况|既往病史/i,
+  dietTexture:/饮食质地|进食质地|咀嚼|吞咽/i,
+  allergy:/过敏|不耐受/i,
+  job:/职业|工作/i,
+  activity:/活动量|身体活动|体力活动/i,
+  exercise:/运动频率|运动情况|运动习惯/i,
+  sleep:/睡眠/i,
+  smokeDrink:/烟酒|吸烟|饮酒/i,
+  meals:/餐次|几餐|三餐/i,
+  breakfastPlace:/早餐.*(?:地点|场景)|早餐在哪里/i,
+  lunchPlace:/午餐.*(?:地点|场景)|午餐在哪里/i,
+  dinnerPlace:/晚餐.*(?:地点|场景)|晚餐在哪里/i,
+  preference:/饮食偏好|饮食禁忌|食物偏好|忌口/i,
+  season:/季节/i,
+  bodyFat:/体脂/i,
+  exerciseHabit:/当前运动习惯/i,
+  exerciseDuration:/运动时长|每次运动/i,
+  sittingTime:/久坐/i,
+  sportType:/运动类型|常见运动/i,
+  exerciseContra:/运动禁忌/i,
+  chronicPain:/慢性疼痛/i,
+  jointInjury:/关节|运动损伤/i,
+  cardioRisk:/心血管|运动风险/i,
+  fmsBalance:/单脚站立/i,
+  fmsSymmetry:/左右平衡|协调/i,
+  fmsShoulder:/肩关节/i,
+  fmsThoracic:/胸椎/i,
+  fmsHip:/髋关节/i,
+  fmsAnkle:/踝关节/i,
+  fmsSquat:/深蹲/i,
+  fmsLunge:/弓步|上下楼梯/i,
+  fmsCore:/核心稳定|平板支撑/i,
+  fmsHamstring:/腘绳肌|髋屈肌/i,
+  fmsCalf:/小腿柔韧/i
+};
+
+function importText(value){
+  return String(value ?? "").replace(/\s+/g," ").trim();
+}
+function importNorm(value){
+  return importText(value).toLowerCase().replace(/[：:，,；;、|/\\()[\]{}「」“”‘’\s]/g,"");
+}
+function importEntriesFromJson(payload){
+  const entries=[];
+  const add=(key,label,value)=>{
+    if(value === null || value === undefined || value === "") return;
+    if(Array.isArray(value)) value.forEach(item=>add(key,label,item));
+    else if(typeof value === "object") Object.entries(value).forEach(([childKey,childValue])=>{
+      const nestedKey=key === "fms" ? `fms${childKey.charAt(0).toUpperCase()}${childKey.slice(1)}` : childKey;
+      add(nestedKey,childKey,childValue);
+    });
+    else entries.push({key:key || "",label:importText(label || key),value:importText(value)});
+  };
+  const data=payload?.data && typeof payload.data === "object" ? payload.data : payload;
+  if(data && typeof data === "object") Object.entries(data).forEach(([key,value])=>add(key,key,value));
+  if(Array.isArray(payload?.values)) payload.values.forEach(item=>add("",item?.label,item?.value));
+  if(Array.isArray(payload?.snapshot)) payload.snapshot.forEach(item=>add(item?.id || item?.name,item?.id || item?.name,item?.value));
+  if(Array.isArray(payload?.sections)) payload.sections.forEach(section=>section.questions?.forEach(question=>add("",question.title,question.values?.join("；"))));
+  return entries;
+}
+function importEntriesFromHtml(text){
+  const doc=new DOMParser().parseFromString(text,"text/html");
+  const entries=[];
+  const add=(key,label,value)=>{ const clean=importText(value); if(clean) entries.push({key:key || "",label:importText(label || key),value:clean}); };
+  const payloadNode=doc.querySelector("#yiteng-data");
+  if(payloadNode?.textContent.trim()){
+    try{
+      const payload=JSON.parse(payloadNode.textContent);
+      const data=payload.data || payload;
+      if(data && typeof data === "object") Object.entries(data).forEach(([key,value])=>{
+        if(key !== "sections" && key !== "values") add(key,key,Array.isArray(value) ? value.join("；") : value);
+      });
+      (data.sections || []).forEach(section=>(section.questions || []).forEach(question=>add("",question.title,(question.values || []).join("；"))));
+      (data.values || []).forEach(item=>add(item?.label,item?.label,item?.value));
+      if(entries.length) return entries;
+    }catch{}
+  }
+  doc.querySelectorAll("[data-label]").forEach(node=>{
+    const label=node.getAttribute("data-label");
+    if(node.matches("input,select,textarea")){
+      if((node.type === "checkbox" || node.type === "radio") && !node.checked) return;
+      add("",label,node.matches("select") ? node.options[node.selectedIndex]?.text : node.value);
+    }else add("",label,node.innerText);
+  });
+  doc.querySelectorAll(".question").forEach(question=>{
+    const title=question.querySelector(".q-title,h3,h4")?.textContent;
+    const values=[...question.querySelectorAll("li,td,p")].map(node=>node.textContent.trim()).filter(Boolean);
+    add("",title,values.join("；"));
+  });
+  doc.querySelectorAll("table tr").forEach(row=>{
+    const cells=[...row.children].map(cell=>cell.textContent.trim()).filter(Boolean);
+    if(cells.length >= 2) add("",cells[0],cells.slice(1).join("；"));
+  });
+  return entries;
+}
+function importCandidate(entries,id){
+  const aliases={disease:["diseases"],sportType:["sportTypes"]};
+  const exact=entries.filter(item=>item.key === id || aliases[id]?.includes(item.key));
+  if(exact.length) return exact.map(item=>item.value).join("；");
+  const rule=importRules[id];
+  if(!rule) return "";
+  return entries.filter(item=>rule.test(`${item.label} ${item.value}`)).map(item=>item.value).join("；");
+}
+function importSelectValue(control,source){
+  const text=importNorm(source);
+  return [...control.options].find(option=>{
+    if(!option.value && !option.text.trim()) return false;
+    const value=importNorm(option.value), label=importNorm(option.text);
+    return text === value || text === label || (value && text.includes(value)) || (label && text.includes(label));
+  })?.value || "";
+}
+function importToForm(entries){
+  let changed=0;
+  Object.keys(importRules).forEach(id=>{
+    const controls=id === "disease" ? [...document.querySelectorAll('input[name="disease"]')] : id === "sportType" ? [...document.querySelectorAll('input[name="sportType"]')] : [$(id)].filter(Boolean);
+    if(!controls.length) return;
+    const source=importCandidate(entries,id);
+    if(!source) return;
+    if(controls[0].type === "checkbox"){
+      controls.forEach(control=>{
+        const normalizedSource=importNorm(source);
+        const diseaseAliases={
+          "糖尿病":["糖尿病","diabetes"],
+          "高血压":["高血压"],
+          "高脂血症":["高脂血症","高血脂","血脂异常"],
+          "高尿酸":["高尿酸","尿酸偏高"],
+          "肥胖/超重":["肥胖","超重"],
+          "CKD":["慢性肾病","肾病","ckd"],
+          "COPD":["慢性阻塞性肺疾病","copd"],
+          "无明确疾病":["无明确疾病","没有明确疾病"]
+        };
+        const terms=id === "disease"
+          ? (diseaseAliases[control.value] || [control.value, control.closest("label")?.textContent || ""])
+          : [control.value];
+        if(terms.some(term=>term && normalizedSource.includes(importNorm(term)))){
+          if(!control.checked){ control.checked=true; changed++; }
+        }
+      });
+      return;
+    }
+    const control=controls[0];
+    let value=source;
+    if(control.type === "number") value=source.match(/-?\d+(?:\.\d+)?/)?.[0] || "";
+    if(control.tagName === "SELECT") value=importSelectValue(control,source);
+    if(!value) return;
+    if(control.value !== value){ control.value=value; control.dispatchEvent(new Event("change",{bubbles:true})); changed++; }
+  });
+  return changed;
+}
+function importMissingFields(){
+  const missing=[...document.querySelectorAll("#mainForm [required]")].filter(control=>!control.value && !control.checked).map(control=>control.closest(".field")?.querySelector(".label")?.textContent.replace("*","").trim() || control.id);
+  if(!document.querySelector('input[name="disease"]:checked')) missing.unshift("现病史或管理目标");
+  return [...new Set(missing)].slice(0,8);
+}
+async function importPlannerFile(file){
+  const text=await file.text();
+  let entries=[];
+  if(/\.json$/i.test(file.name) || file.type.includes("json")){
+    try{ entries=importEntriesFromJson(JSON.parse(text)); }catch{ throw new Error("JSON 文件无法解析"); }
+  }else entries=importEntriesFromHtml(text);
+  const changed=importToForm(entries);
+  draftDirty=true;
+  saveDraft();
+  const missing=importMissingFields();
+  $("saveStatus").textContent=`已导入“${file.name}”，成功回填 ${changed} 项。${missing.length ? `待补充：${missing.join("、")}${missing.length >= 8 ? "等" : ""}。` : "表单信息已基本完整。"}`;
+}
+$('importFileBtn').addEventListener('click',()=>$('importFile').click());
+$('importFile').addEventListener('change',async event=>{
+  const file=event.target.files?.[0];
+  if(!file) return;
+  try{ await importPlannerFile(file); }catch(error){ $("saveStatus").textContent=`导入失败：${error.message || "文件格式不受支持"}。`; }
+  event.target.value="";
+});
+
+$("saveDraftBtn").addEventListener("click",exportFormDraft);
+function restoreDraft(){
+  try{
+    const draft=JSON.parse(localStorage.getItem(DRAFT_KEY)||"null");
+    if(!draft?.snapshot) return;
+    formControls().forEach((control,index)=>{
+      const saved=draft.snapshot[index];
+      if(!saved || saved.id!==control.id || saved.name!==control.name) return;
+      if(control.type==="checkbox" || control.type==="radio") control.checked=saved.checked;
+      else control.value=saved.value;
+    });
+    $("saveStatus").textContent=`已恢复本浏览器上次保存的填写内容（${new Date(draft.savedAt).toLocaleString("zh-CN")}）。`;
+  }catch{}
+}
+restoreDraft();
+document.querySelectorAll("#mainForm .section").forEach(section=>{
+  if(section.id!=="movementSection") return;
+  section.querySelectorAll("[required]").forEach(control=>control.removeAttribute("required"));
+  section.querySelectorAll(".req").forEach(mark=>mark.remove());
+});
+$("mainForm").addEventListener("input",()=>{draftDirty=true;saveDraft();});
+$("mainForm").addEventListener("change",()=>{draftDirty=true;saveDraft();});
+window.setInterval(saveDraft,10000);
+window.addEventListener("pagehide",saveDraft);
+window.addEventListener("beforeunload",event=>{
+  if(!draftDirty) return;
+  saveDraft();
+  if(draftDirty){event.preventDefault();event.returnValue="";}
+});
+
+document.querySelectorAll('input[name="disease"]').forEach(input => {
+  input.addEventListener("change", updateGoalHint);
+});
+updateGoalHint();
+
+$("mainForm").addEventListener("submit", e=>{
+  e.preventDefault();
+  let diseases = checkedDiseases();
+  const otherDisease = v("otherDisease");
+  if(!$("mainForm").checkValidity() || diseases.length === 0 || (diseases.includes("其他") && !otherDisease)){
+    $("formError").style.display = "block";
+    if(diseases.includes("其他") && !otherDisease) $("otherDisease").focus();
+    $("mainForm").reportValidity();
+    return;
+  }
+  $("formError").style.display = "none";
+  if(diseases.includes("无明确疾病") && diseases.length > 1){
+    diseases = diseases.filter(x=>x !== "无明确疾病");
+  }
+  const data = {
+    name:v("name"), sex:v("sex"), age:n("age"), height:n("height"), weight:n("weight"),
+    region:v("region"), diseases, goal:v("goal"), labs:v("labs"), otherDisease, dietTexture:v("dietTexture"), allergy:v("allergy"),
+    job:v("job"), activity:v("activity"), exercise:v("exercise"), sleep:v("sleep"),
+    smokeDrink:v("smokeDrink"), meals:v("meals"),
+    breakfastPlace:v("breakfastPlace"), lunchPlace:v("lunchPlace"), dinnerPlace:v("dinnerPlace"),
+    preference:v("preference"), season:v("season"), dietMode:"balanced", macro:{...DIET_MODES.balanced.macro},
+    bodyFat:n("bodyFat") || null, exerciseHabit:v("exerciseHabit"), exerciseDuration:v("exerciseDuration"),
+    sittingTime:v("sittingTime"), sportTypes:checkedSportTypes(), exerciseContra:v("exerciseContra"),
+    chronicPain:v("chronicPain"), jointInjury:v("jointInjury"), cardioRisk:v("cardioRisk"),
+    fms:{balance:optionalN("fmsBalance"),symmetry:optionalN("fmsSymmetry"),shoulder:optionalN("fmsShoulder"),thoracic:optionalN("fmsThoracic"),hip:optionalN("fmsHip"),ankle:optionalN("fmsAnkle"),squat:optionalN("fmsSquat"),lunge:optionalN("fmsLunge"),core:optionalN("fmsCore"),hamstring:optionalN("fmsHamstring"),calf:optionalN("fmsCalf")}
+  };
+  const plan = calculate(data);
+  render(data, plan);
+  $("formScreen").classList.add("hidden");
+  $("reportScreen").classList.remove("hidden");
+  $("stepText").textContent = "第 2 屏：分析报告";
+  $("progressBar").style.width = "100%";
+  submitToFeishu(data, plan);
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+$("backBtn").addEventListener("click", ()=>{
+  $("reportScreen").classList.add("hidden");
+  $("formScreen").classList.remove("hidden");
+  $("stepText").textContent = "第 1 屏：填写信息";
+  $("progressBar").style.width = "50%";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+$("exportBtn").addEventListener("click", exportReport);
+$("exportPdfBtn").addEventListener("click",()=>window.print());
+$("savePlanBtn").addEventListener("click",savePlanJson);
+</script>
+</body>
+</html>
